@@ -376,13 +376,9 @@
 .demo-svg .nucleus-ball { fill: #e0453a; stroke: rgba(0, 0, 0, .25); }
 .demo-svg .nucleus-text { fill: #fff; font: 700 15px system-ui, sans-serif; }
 .demo-svg .nucleus-text.small { font-size: 10px; }
-.demo-svg .spin { transform-box: view-box; transform-origin: 50% 50%; animation: spin linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
 .ion-svg { transition: box-shadow .3s; }
 .ion-svg.pos { box-shadow: 0 0 0 3px #e0453a55 inset; }
 .ion-svg.neg { box-shadow: 0 0 0 3px #2f7de155 inset; }
-.demo-svg .flyout { animation: flyout .8s ease-out forwards; }
-@keyframes flyout { to { transform: translate(90px, -60px); opacity: 0; } }
 .ion-symbol .big-symbol { font-size: 2.2rem; font-weight: 800; margin-right: 8px; }
 .ion-dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 8px 0; }
 .ion-dl dt { color: var(--muted); }

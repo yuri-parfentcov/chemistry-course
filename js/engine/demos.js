@@ -1,7 +1,7 @@
 // Интерактивные демонстрации к теории: масштаб, ионы, взаимодействие атомов, опыт Резерфорда.
 // createDemo(root, kind, { onEvent }) — onEvent(строка) сообщает уроку, что ученик что-то увидел.
-import { $, $$, esc, ease, lerp, reducedMotion } from "../core/util.js?v=15";
-import { shellsOf } from "./atom.js?v=15";
+import { $, $$, esc, ease, lerp, reducedMotion } from "../core/util.js?v=17";
+import { shellsOf } from "./atom.js?v=17";
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -165,27 +165,58 @@ function ionDemo(root, onEvent) {
       </div>
     </div>`;
   const svg = $("svg", root);
+  svg.innerHTML = '<g class="ion-static"></g><g class="ion-electrons"></g>';
+  const gStatic = $(".ion-static", svg), gE = $(".ion-electrons", svg);
 
-  function render(flyOut = false) {
+  // Вращение считаем сами (а не CSS), чтобы знать, где сейчас каждый электрон:
+  // улетающий стартует ровно со своего места, прилетающий садится точно в свободное.
+  const still = reducedMotion();
+  const t0 = performance.now();
+  const slotAngle = (si, i, n, now) => (i / n) * Math.PI * 2 + (still ? 0 : ((now - t0) / ((8 + si * 6) * 1000)) * Math.PI * 2);
+  const FAR = 220;          // за краем картинки
+  let flyers = [];          // { kind: "out" | "in", si, slot, angle, r0, start }
+  const FLY = still ? 1 : 1100;
+
+  function frame(now) {
+    if (!root.isConnected) return;          // шаг закрыт — останавливаемся
+    const shells = shellsOf(e);
+    const landing = new Set(flyers.filter((f) => f.kind === "in").map((f) => `${f.si}:${f.slot}`));
+    let html = "";
+    shells.forEach((n, si) => {
+      const cls = si === shells.length - 1 ? "electron outer" : "electron";
+      for (let i = 0; i < n; i++) {
+        if (landing.has(`${si}:${i}`)) continue;
+        const a = slotAngle(si, i, n, now);
+        html += `<circle class="${cls}" r="7" cx="${(RADII[si] * Math.cos(a)).toFixed(1)}" cy="${(RADII[si] * Math.sin(a)).toFixed(1)}"/>`;
+      }
+    });
+    flyers = flyers.filter((f) => {
+      const t = Math.min(1, (now - f.start) / FLY);
+      let r, a, op = 1;
+      if (f.kind === "out") {
+        r = lerp(f.r0, FAR, t * t);                    // разгоняется и уходит за край
+        a = f.angle;
+        op = 1 - Math.max(0, (t - 0.75) / 0.25);
+      } else {
+        const n = shells[f.si] || 1;
+        a = slotAngle(f.si, f.slot, n, now);
+        r = lerp(FAR, RADII[f.si], ease(t));            // прилетает снаружи на своё место
+      }
+      html += `<circle class="electron outer flying" r="7" opacity="${op.toFixed(2)}" cx="${(r * Math.cos(a)).toFixed(1)}" cy="${(r * Math.sin(a)).toFixed(1)}"/>`;
+      return t < 1;
+    });
+    gE.innerHTML = html;
+    requestAnimationFrame(frame);
+  }
+
+  function render() {
     const shells = shellsOf(e);
     const charge = el.z - e;
     const outer = shells.length ? shells[shells.length - 1] : 0;
     const cap = shells.length === 1 ? 2 : 8;
     const full = outer === cap;
-    let html = "";
-    shells.forEach((n, si) => {
-      const r = RADII[si];
-      html += `<circle r="${r}" class="shell"/>`;
-      let dots = "";
-      for (let i = 0; i < n; i++) {
-        const a = (i / n) * Math.PI * 2;
-        dots += `<circle class="electron ${si === shells.length - 1 ? "outer" : ""}" r="7" cx="${(r * Math.cos(a)).toFixed(1)}" cy="${(r * Math.sin(a)).toFixed(1)}"/>`;
-      }
-      html += `<g class="spin" style="animation-duration:${8 + si * 6}s">${dots}</g>`;
-    });
-    html += `<circle r="24" class="nucleus-ball"/><text dy="0.35em" text-anchor="middle" class="nucleus-text">+${el.z}</text>`;
-    if (flyOut) html += `<circle class="electron outer flyout" r="7" cx="${RADII[shells.length] || 120}" cy="0"/>`;
-    svg.innerHTML = html;
+    gStatic.innerHTML = shells.map((_, si) => `<circle r="${RADII[si]}" class="shell"/>`).join("") +
+      `<circle r="24" class="nucleus-ball"/><text dy="0.35em" text-anchor="middle" class="nucleus-text">+${el.z}</text>`;
     svg.classList.toggle("pos", charge > 0);
     svg.classList.toggle("neg", charge < 0);
 
@@ -211,16 +242,28 @@ function ionDemo(root, onEvent) {
 
   root.addEventListener("click", (ev) => {
     const chip = ev.target.closest(".chip-btn");
-    if (chip) { el = ION_ELEMENTS.find((x) => x.s === chip.dataset.el); e = el.z; return render(); }
+    if (chip) { el = ION_ELEMENTS.find((x) => x.s === chip.dataset.el); e = el.z; flyers = []; return render(); }
     const b = ev.target.closest("[data-d]");
     if (!b) return;
     const d = Number(b.dataset.d);
     const ne = Math.max(Math.max(0, el.z - 3), Math.min(el.z + 3, e + d));
     if (ne === e) return;
+    const now = performance.now();
+    flyers = flyers.filter((f) => f.kind === "out");   // недолетевшие — сразу на место
+    if (d < 0) {
+      // отрываем последний электрон внешнего слоя с того места, где он сейчас
+      const shells = shellsOf(e), si = shells.length - 1, n = shells[si];
+      flyers.push({ kind: "out", angle: slotAngle(si, n - 1, n, now), r0: RADII[si], start: now });
+    }
     e = ne;
-    render(d < 0);
+    if (d > 0) {
+      const shells = shellsOf(e), si = shells.length - 1;
+      flyers.push({ kind: "in", si, slot: shells[si] - 1, start: now });
+    }
+    render();
   });
   render();
+  requestAnimationFrame(frame);
 }
 
 // ───────────────────────── 3. Как атомы взаимодействуют ─────────────────────────

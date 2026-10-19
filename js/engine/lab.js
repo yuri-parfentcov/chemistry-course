@@ -2,12 +2,12 @@
 // Реакции находятся по данным REACTIONS: когда в жидкости есть все реагенты
 // (и выполнено условие, например нагрев) — запускаем. pH считает модель из ph.js,
 // капустный индикатор окрашивает жидкость, осадки ложатся на дно, мыло пенится.
-import { SUBSTANCES } from "../../data/substances.js?v=15";
-import { REACTIONS } from "../../data/reactions.js?v=15";
-import { formulaHTML } from "./formula.js?v=15";
-import { createBeaker } from "./lab-macro.js?v=15";
-import { mixturePH, cabbageColor, stripColor, phWord } from "./ph.js?v=15";
-import { $, esc, fmt } from "../core/util.js?v=15";
+import { SUBSTANCES } from "../../data/substances.js?v=17";
+import { REACTIONS } from "../../data/reactions.js?v=17";
+import { formulaHTML } from "./formula.js?v=17";
+import { createBeaker } from "./lab-macro.js?v=17";
+import { mixturePH, cabbageColor, stripColor, phWord } from "./ph.js?v=17";
+import { $, esc, fmt } from "../core/util.js?v=17";
 
 // Банка на полке (общая для лаборатории и разделения смесей)
 export function jarHTML(id) {

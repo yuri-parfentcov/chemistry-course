@@ -1,28 +1,28 @@
 // Плеер урока-миссии: шаги по порядку, «Дальше» открывается, когда шаг выполнен.
 // Шаги-тренажёры (lab, separate, atom, build, balance, micro) показывают список целей
 // и открывают теорию, когда цели выполнены.
-import { LESSONS } from "../../data/course.js?v=15";
-import { REACTIONS } from "../../data/reactions.js?v=15";
-import { SPHERES } from "../../data/spheres.js?v=15";
-import { CARDS } from "../../data/cards.js?v=15";
-import { $, $$, esc } from "../core/util.js?v=15";
-import { completeLesson, lessonStatus, nextLesson } from "../core/progress.js?v=15";
-import { createLab } from "../engine/lab.js?v=15";
-import { createSeparator } from "../engine/separate.js?v=15";
-import { createMicro } from "../engine/lab-micro.js?v=15";
-import { createCalc } from "../engine/calc.js?v=15";
-import { createAtom } from "../engine/atom.js?v=15";
-import { createBuilder } from "../engine/builder.js?v=15";
-import { createBalancer } from "../engine/balancer.js?v=15";
-import { createMixer } from "../engine/mixer.js?v=15";
-import { createCell } from "../engine/cell.js?v=15";
-import { createRate } from "../engine/rate.js?v=15";
-import { createSort } from "../engine/sort.js?v=15";
-import { createCombine } from "../engine/combine.js?v=15";
-import { createMicelle } from "../engine/micelle.js?v=15";
-import { createDemo } from "../engine/demos.js?v=15";
-import { equationHTML, } from "../engine/equation.js?v=15";
-import { formulaHTML } from "../engine/formula.js?v=15";
+import { LESSONS } from "../../data/course.js?v=17";
+import { REACTIONS } from "../../data/reactions.js?v=17";
+import { SPHERES } from "../../data/spheres.js?v=17";
+import { CARDS } from "../../data/cards.js?v=17";
+import { $, $$, esc } from "../core/util.js?v=17";
+import { completeLesson, lessonStatus, nextLesson } from "../core/progress.js?v=17";
+import { createLab } from "../engine/lab.js?v=17";
+import { createSeparator } from "../engine/separate.js?v=17";
+import { createMicro } from "../engine/lab-micro.js?v=17";
+import { createCalc } from "../engine/calc.js?v=17";
+import { createAtom } from "../engine/atom.js?v=17";
+import { createBuilder } from "../engine/builder.js?v=17";
+import { createBalancer } from "../engine/balancer.js?v=17";
+import { createMixer } from "../engine/mixer.js?v=17";
+import { createCell } from "../engine/cell.js?v=17";
+import { createRate } from "../engine/rate.js?v=17";
+import { createSort } from "../engine/sort.js?v=17";
+import { createCombine } from "../engine/combine.js?v=17";
+import { createMicelle } from "../engine/micelle.js?v=17";
+import { createDemo } from "../engine/demos.js?v=17";
+import { equationHTML, } from "../engine/equation.js?v=17";
+import { formulaHTML } from "../engine/formula.js?v=17";
 
 const id = new URLSearchParams(location.search).get("id");
 const lesson = LESSONS[id];
