@@ -1,9 +1,9 @@
 // Глава 1 «Сборка на заказ»: из лотка частиц собрать атомы и ионы по заказу.
 // Ход — одна частица, перенесённая из лотка в атом или обратно.
 // Логика (par, status) чистая — её же использует tools/check.mjs.
-import { BY_Z } from "../../data/periodic.js?v=28";
-import { atomMarkup, shellsOf } from "../engine/atom.js?v=28";
-import { $, $$, esc } from "../core/util.js?v=28";
+import { BY_Z } from "../../data/periodic.js?v=29";
+import { atomMarkup, shellsOf } from "../engine/atom.js?v=29";
+import { $, $$, esc } from "../core/util.js?v=29";
 
 const KINDS = ["p", "n", "e"];
 const NAMES = { p: ["протон", "протона", "протонов"], n: ["нейтрон", "нейтрона", "нейтронов"], e: ["электрон", "электрона", "электронов"] };

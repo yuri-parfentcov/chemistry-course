@@ -1,8 +1,8 @@
 // Балансировщик: ученик подбирает коэффициенты, а «весы» для каждого элемента
 // показывают, сколько атомов слева и справа. Каждая копия молекулы видна как кучка шариков.
-import { ELEMENTS } from "../../data/elements.js?v=28";
-import { countAtoms, formulaHTML } from "./formula.js?v=28";
-import { $, esc } from "../core/util.js?v=28";
+import { ELEMENTS } from "../../data/elements.js?v=29";
+import { countAtoms, formulaHTML } from "./formula.js?v=29";
+import { $, esc } from "../core/util.js?v=29";
 
 const gcd = (a, b) => (b ? gcd(b, a % b) : a);
 

@@ -1,7 +1,7 @@
 // Модуль 4. Реакции и уравнения
 // В шагах balance коэффициенты k — правильный ответ (для проверки данных);
 // ученик начинает с единиц.
-import { fmt, pick } from "../../js/core/util.js?v=28";
+import { fmt, pick } from "../../js/core/util.js?v=29";
 
 export const LESSONS = [
   {

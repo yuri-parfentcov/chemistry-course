@@ -1,5 +1,5 @@
 // Модуль 2. Атомы и таблица Менделеева
-import { fmt, pick } from "../../js/core/util.js?v=28";
+import { fmt, pick } from "../../js/core/util.js?v=29";
 
 export const LESSONS = [
   {

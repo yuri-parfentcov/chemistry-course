@@ -1,10 +1,10 @@
 // Конструктор молекул: атом — шарик с «руками» (валентность).
 // Нажмите атом, потом другой — появится связь; нажмите ещё раз — связь станет двойной.
 // Нажатие на связь убирает её. Атомы можно перетаскивать.
-import { ELEMENTS } from "../../data/elements.js?v=28";
-import { MOLECULE_BY_KEY, compositionKey } from "../../data/molecules.js?v=28";
-import { formulaHTML } from "./formula.js?v=28";
-import { $, esc } from "../core/util.js?v=28";
+import { ELEMENTS } from "../../data/elements.js?v=29";
+import { MOLECULE_BY_KEY, compositionKey } from "../../data/molecules.js?v=29";
+import { formulaHTML } from "./formula.js?v=29";
+import { $, esc } from "../core/util.js?v=29";
 
 const W = 600, H = 340;
 const R = (el) => ELEMENTS[el].r * 58;

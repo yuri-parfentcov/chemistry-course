@@ -1,7 +1,7 @@
 // Прогресс по курсу: пройденные миссии, открытые сферы, доступ к урокам
-import { LESSONS, MODULES } from "../../data/course.js?v=28";
-import { CARDS } from "../../data/cards.js?v=28";
-import { createSrs, today, LEARNED_BOX } from "./srs.js?v=28";
+import { LESSONS, MODULES } from "../../data/course.js?v=29";
+import { CARDS } from "../../data/cards.js?v=29";
+import { createSrs, today, LEARNED_BOX } from "./srs.js?v=29";
 
 const KEY = "chem-progress-v1";
 

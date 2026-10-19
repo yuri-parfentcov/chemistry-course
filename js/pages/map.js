@@ -1,10 +1,10 @@
 // Карта курса: модули по порядку, миссии, открытые сферы и статистика
-import { MODULES, LESSONS } from "../../data/course.js?v=28";
-import { SPHERES } from "../../data/spheres.js?v=28";
-import { $, esc } from "../core/util.js?v=28";
-import { srs, lessonStatus, openedSpheres, doneCount, ORDER, isDone } from "../core/progress.js?v=28";
-import { CHAPTERS } from "../../data/game-levels.js?v=28";
-import { stars } from "../game/store.js?v=28";
+import { MODULES, LESSONS } from "../../data/course.js?v=29";
+import { SPHERES } from "../../data/spheres.js?v=29";
+import { $, esc } from "../core/util.js?v=29";
+import { srs, lessonStatus, openedSpheres, doneCount, ORDER, isDone } from "../core/progress.js?v=29";
+import { CHAPTERS } from "../../data/game-levels.js?v=29";
+import { stars } from "../game/store.js?v=29";
 
 const STATUS = {
   available: { icon: "▶", text: "Начать" },
@@ -49,11 +49,21 @@ function render() {
       <div class="module-n">${m.n}</div>
       <div class="module-body">
         <h3>${esc(m.title)}</h3>
-        ${lessons.length ? `<div class="missions">${lessons.map(missionHTML).join("")}</div>` : ""}
+        ${lessons.length ? `<div class="missions">${lessons.map(missionHTML).join("")}${CHAPTERS.filter((c) => c.levels.length && lessons.some((l) => l.id === c.unlock)).map(gameHTML).join("")}</div>` : ""}
         ${m.plan.length ? `<p class="plan">${lessons.length ? "Скоро ещё: " : "Скоро: "}${m.plan.map(esc).join(" · ")}</p>` : ""}
       </div>
     </li>`;
   }).join("");
+}
+
+// Глава игры в списке тем: открыта — ссылка, закрыта — с замком
+function gameHTML(c) {
+  const open = isDone(c.unlock);
+  const got = c.levels.reduce((s, l) => s + stars(l.id), 0);
+  const inner = `<span class="m-sphere">${c.icon}</span>
+    <span class="m-text"><b>Игра, глава ${c.n}: ${esc(c.title)}</b><small>${esc(c.sub)}</small></span>
+    <span class="m-status ${open ? "" : "locked"}">${open ? `★ ${got} / ${c.levels.length * 3}` : `🔒 после «${esc(LESSONS[c.unlock].title)}»`}</span>`;
+  return open ? `<a class="mission game" href="game.html?ch=${c.id}">${inner}</a>` : `<div class="mission game locked">${inner}</div>`;
 }
 
 function missionHTML(l) {

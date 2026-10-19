@@ -1,5 +1,5 @@
 // Модуль 1. Вещества и смеси
-import { fmt, pick } from "../../js/core/util.js?v=28";
+import { fmt, pick } from "../../js/core/util.js?v=29";
 
 const has = (s, id) => s.has[id] !== undefined;
 const got = (s, text) => s.products.some((p) => p.includes(text));

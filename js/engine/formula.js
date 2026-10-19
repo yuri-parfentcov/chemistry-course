@@ -1,5 +1,5 @@
 // Формулы: подсчёт атомов, молярная масса, проверка баланса, красивый вывод
-import { ELEMENTS } from "../../data/elements.js?v=28";
+import { ELEMENTS } from "../../data/elements.js?v=29";
 
 // "CH3COOH" → { C: 2, H: 4, O: 2 }; понимает скобки: "Ca(OH)2"
 export function countAtoms(formula) {

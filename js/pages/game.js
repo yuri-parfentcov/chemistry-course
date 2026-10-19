@@ -1,13 +1,13 @@
 // «Атомная мастерская»: главы → уровни → уровень. Адреса: game.html, ?ch=forge, ?ch=forge&lv=f3
-import { CHAPTERS, CHAPTER_BY_ID } from "../../data/game-levels.js?v=28";
-import { LESSONS } from "../../data/course.js?v=28";
-import { isDone } from "../core/progress.js?v=28";
-import { $, esc } from "../core/util.js?v=28";
-import * as store from "../game/store.js?v=28";
-import * as forge from "../game/forge.js?v=28";
-import * as transfer from "../game/transfer.js?v=28";
-import * as grid from "../game/grid.js?v=28";
-import * as stellar from "../game/stellar.js?v=28";
+import { CHAPTERS, CHAPTER_BY_ID } from "../../data/game-levels.js?v=29";
+import { LESSONS } from "../../data/course.js?v=29";
+import { isDone } from "../core/progress.js?v=29";
+import { $, esc } from "../core/util.js?v=29";
+import * as store from "../game/store.js?v=29";
+import * as forge from "../game/forge.js?v=29";
+import * as transfer from "../game/transfer.js?v=29";
+import * as grid from "../game/grid.js?v=29";
+import * as stellar from "../game/stellar.js?v=29";
 
 const ENGINES = { forge, transfer, grid, stellar };
 const main = $("#game");
