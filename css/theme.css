@@ -44,6 +44,8 @@
 }
 
 * { box-sizing: border-box; }
+/* атрибут hidden должен прятать всегда, даже если у элемента свой display (как у .btn) */
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;

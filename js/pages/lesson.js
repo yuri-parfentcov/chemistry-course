@@ -79,7 +79,9 @@ function go(i) {
   const step = lesson.steps[i];
   prevBtn.disabled = i === 0;
   nextBtn.disabled = !done.has(i);
-  nextBtn.hidden = i === lesson.steps.length - 1;
+  const last = i === lesson.steps.length - 1;
+  nextBtn.textContent = last ? (nextLesson(lesson.id) ? "Следующая миссия →" : "На карту →") : "Дальше →";
+  nextBtn.hidden = last && !done.has(i);
   renderStepper();
   hint(done.has(i) ? "" : HINTS[step.type]);
   stage.innerHTML = "";
@@ -88,7 +90,12 @@ function go(i) {
 }
 
 prevBtn.addEventListener("click", () => current > 0 && go(current - 1));
-nextBtn.addEventListener("click", () => current < lesson.steps.length - 1 && go(current + 1));
+nextBtn.addEventListener("click", () => {
+  if (current < lesson.steps.length - 1) return go(current + 1);
+  // последний шаг пройден — к следующей миссии или на карту
+  const next = nextLesson(lesson.id);
+  location.href = next ? `lesson.html?id=${encodeURIComponent(next.id)}` : "index.html";
+});
 
 // ───── общий каркас шага-тренажёра: вступление, цели, рабочая зона, теория ─────
 function trainer(step, i, { title = "", work = "" } = {}) {
@@ -353,6 +360,7 @@ const RENDER = {
       completeLesson(lesson.id);
       complete(i);
       e.target.hidden = true;
+      nextBtn.hidden = false;
       $("#finish", stage).hidden = false;
       $("#finish", stage).scrollIntoView({ behavior: "smooth" });
     });
