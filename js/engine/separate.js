@@ -1,10 +1,10 @@
 // Разделение смесей: полка + инструменты (перемешать, отстоять, фильтр, делительная воронка,
 // прокипятить, выпарить). Поведение каждого вещества задаёт поле sep в data/substances.js.
 // После каждого действия урок получает снимок состояния и сам проверяет свои цели.
-import { SUBSTANCES } from "../../data/substances.js?v=13";
-import { createBeaker } from "./lab-macro.js?v=13";
-import { jarHTML, bindShelf } from "./lab.js?v=13";
-import { $, esc } from "../core/util.js?v=13";
+import { SUBSTANCES } from "../../data/substances.js?v=15";
+import { createBeaker } from "./lab-macro.js?v=15";
+import { jarHTML, bindShelf } from "./lab.js?v=15";
+import { $, esc } from "../core/util.js?v=15";
 
 const CAPACITY = 4;
 const TOOLS = {

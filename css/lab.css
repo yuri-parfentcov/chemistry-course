@@ -2,26 +2,28 @@
 .lesson-head h1 { margin: 8px 0 2px; font-size: clamp(1.6rem, 5vw, 2.2rem); }
 .lesson-head p { margin: 0; }
 
-.stepper { list-style: none; display: flex; gap: 6px; padding: 0; margin: 20px 0 8px; overflow-x: auto; }
-.stepper li { flex: 1; min-width: 0; }
+/* шаги переносятся на вторую строку, а не сжимаются до одной буквы */
+.stepper { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 20px 0 8px; }
+.stepper li { flex: 0 1 auto; }
 .stepper button {
   width: 100%; font: inherit; cursor: pointer; display: flex; align-items: center; gap: 8px;
   background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  padding: 8px 10px; color: var(--muted);
+  padding: 6px 10px; color: var(--muted);
 }
 .stepper button:disabled { cursor: not-allowed; opacity: .55; }
 .stepper .num {
   flex: 0 0 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
   background: var(--bg-2); font-weight: 700; font-size: .85rem;
 }
-.stepper .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: .92rem; }
+.stepper .lbl { white-space: nowrap; font-size: .92rem; }
 .stepper .now button { border-color: var(--accent); color: var(--ink); }
 .stepper .now .num { background: var(--accent); color: var(--accent-ink); }
 .stepper .done .num { background: var(--ok); color: #fff; }
 @media (max-width: 600px) {
   .stepper .lbl { display: none; }
   .stepper .now .lbl { display: inline; }
-  .stepper .now { flex: 3; }
+  .stepper li { flex: 0 0 auto; }
+  .stepper .now { flex: 1 1 auto; }
 }
 
 .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin: 20px 0 6px; }
@@ -358,6 +360,10 @@
 .demo-side p { margin: 6px 0; }
 .demo-label { fill: var(--muted); font: 600 13px system-ui, sans-serif; }
 .demo-label.big { font-size: 17px; fill: var(--ink); }
+/* подпись поверх цветной картинки — на светлой плашке */
+.demo-svg .label-pill { fill: var(--card); stroke: var(--amber); stroke-width: 1.5; }
+.demo-label.pill-text { fill: var(--ink); font-size: 13px; }
+.demo-svg .pill-tick { stroke: var(--amber); stroke-width: 2; }
 .demo-caption { min-height: 3em; margin: 0; }
 .scale-name { font-size: 1.15rem; }
 .scale-path { font-size: .9rem; color: var(--muted); padding-left: 20px; margin: 8px 0 0; }

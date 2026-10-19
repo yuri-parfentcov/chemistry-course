@@ -1,7 +1,7 @@
 // Интерактивные демонстрации к теории: масштаб, ионы, взаимодействие атомов, опыт Резерфорда.
 // createDemo(root, kind, { onEvent }) — onEvent(строка) сообщает уроку, что ученик что-то увидел.
-import { $, $$, esc, ease, lerp, reducedMotion } from "../core/util.js?v=13";
-import { shellsOf } from "./atom.js?v=13";
+import { $, $$, esc, ease, lerp, reducedMotion } from "../core/util.js?v=15";
+import { shellsOf } from "./atom.js?v=15";
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -77,6 +77,13 @@ function scaleDemo(root, onEvent) {
     return `<circle r="${r}" fill="${lv.color}" opacity="${opacity}" stroke="rgba(0,0,0,.2)"/>`;
   }
 
+  // подпись на светлой плашке: читается поверх любого цвета
+  const pill = (text) => {
+    const w = text.length * 7.6 + 20;
+    return `<g transform="translate(0 -34)"><rect x="${-w / 2}" y="-13" width="${w}" height="26" rx="13" class="label-pill"/><text dy="0.35em" text-anchor="middle" class="demo-label pill-text">${esc(text)}</text></g>
+      <line x1="0" y1="-21" x2="0" y2="-11" class="pill-tick"/>`;
+  };
+
   function draw(cur, next, t) {
     // t: 0 — видим текущий объект, 1 — следующий заполнил экран
     const ratio = next ? cur.m / next.m : 1;
@@ -86,7 +93,7 @@ function scaleDemo(root, onEvent) {
     svg.innerHTML = `<defs><radialGradient id="cloud"><stop offset="0" stop-color="#2f7de1" stop-opacity=".35"/><stop offset="1" stop-color="#2f7de1" stop-opacity="0"/></radialGradient></defs>
       ${rCur < 4000 ? shape(cur, rCur, 1 - t * 0.85) : ""}
       ${next ? shape(next, rNext, 0.4 + t * 0.6) : ""}
-      ${next && t === 0 ? `<circle r="10" fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="3 3"/><text y="-16" text-anchor="middle" class="demo-label">${esc(next.name.toLowerCase())} — где-то здесь</text>` : ""}`;
+      ${next && t === 0 ? `<circle r="10" fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="3 3"/>${pill(`${next.name.toLowerCase()} — где-то здесь`)}` : ""}`;
   }
 
   function show() {

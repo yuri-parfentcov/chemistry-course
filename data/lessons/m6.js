@@ -1,5 +1,5 @@
 // Модуль 6. Растворы и концентрации
-import { fmt, pick } from "../../js/core/util.js?v=13";
+import { fmt, pick } from "../../js/core/util.js?v=15";
 
 const near = (x, target, tol) => Math.abs(x - target) <= tol;
 
