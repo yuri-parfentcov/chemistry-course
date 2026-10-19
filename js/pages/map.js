@@ -26,7 +26,7 @@ function render() {
 
   // следующая непройденная миссия — крупно наверху
   const nextId = ORDER.find((lid) => lessonStatus(lid) === "available");
-  $("#pilot").innerHTML = nextId ? missionHTML(LESSONS[nextId]) : `<p>🎉 Все открытые миссии пройдены. Новые модули скоро появятся.</p>`;
+  $("#pilot").innerHTML = nextId ? missionHTML(LESSONS[nextId]) : `<p>🎓 Все миссии пройдены — курс завершён! Возвращайтесь к коллекции кристаллов, чтобы знания не выветрились.</p>`;
 
   $("#modules").innerHTML = MODULES.map((m) => {
     const lessons = (m.lessons || []).map((id) => LESSONS[id]);

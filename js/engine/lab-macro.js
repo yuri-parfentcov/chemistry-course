@@ -20,7 +20,7 @@ export function createBeaker(canvas) {
     pour: null,
     // смеси: муть, осадок, верхний слой (или эмульсия), кристаллы, микробы, пар, огонь
     turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null,
-    microbes: 0, steam: [], steaming: 0, flame: 0, lather: 0
+    microbes: 0, steam: [], steaming: 0, flame: 0, lather: 0, cloud: null
   };
   const BLOBS = Array.from({ length: 26 }, () => [Math.random(), Math.random(), 3 + Math.random() * 6]);
   const MICROBES = Array.from({ length: 7 }, () => [Math.random(), Math.random(), Math.random() * 6]);
@@ -241,6 +241,19 @@ export function createBeaker(canvas) {
     }
     ctx.restore();
 
+    // облако ядовитого газа
+    if (s.cloud) {
+      for (let i = 0; i < 9; i++) {
+        const x = 90 + i * 14 + Math.sin(time / 600 + i) * 6, y = 30 + Math.sin(time / 500 + i * 2) * 8 + (i % 3) * 10;
+        ctx.fillStyle = `rgba(${s.cloud.join(",")},${0.35 + 0.1 * Math.sin(time / 400 + i)})`;
+        ctx.beginPath();
+        ctx.arc(x, y, 18 + (i % 4) * 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "#c2410c";
+      ctx.font = "700 14px system-ui, sans-serif";
+      ctx.fillText("☠ ядовитый газ", 96, 22);
+    }
     // пар над стаканом
     for (const p of s.steam) {
       ctx.fillStyle = `rgba(200,210,215,${p.a * 0.5})`;
@@ -349,7 +362,7 @@ export function createBeaker(canvas) {
     draw(time);
     const busy = s.grains.length || s.bubbles.length || s.fizz > 0.02 || s.foam > 0.02 || s.pour ||
       Math.abs(s.level - s.portions / CAPACITY) > 0.002 || Math.abs(s.temp - s.tempShown) > 0.05 ||
-      s.steam.length || s.steaming > 0 || Math.abs(s.foam - (s.lather || 0)) > 0.02 || s.flame > 0.02 || s.microbes > 0 || (s.layer && s.layer.emulsion) ||
+      s.steam.length || s.steaming > 0 || s.cloud || Math.abs(s.foam - (s.lather || 0)) > 0.02 || s.flame > 0.02 || s.microbes > 0 || (s.layer && s.layer.emulsion) ||
       Math.abs(s.turbid - s.turbidShown) > 0.005 || s.turbid > 0.01;
     if (busy) requestAnimationFrame(frame);
     else { running = false; last = 0; }
@@ -367,6 +380,9 @@ export function createBeaker(canvas) {
   const api = {
     get full() { return s.portions >= CAPACITY; },
     get hasLiquid() { return s.portions > 0; },
+    get temp() { return s.temp; },
+    // ядовитый газ над стаканом (остаётся, пока стакан не вымыли)
+    cloud(hex) { s.cloud = hexToRgb(hex); kick(); },
     pour(hex) {
       const rgb = hexToRgb(hex);
       s.rgb = mixColor(rgb);
@@ -399,7 +415,7 @@ export function createBeaker(canvas) {
     },
     reset() {
       Object.assign(s, { portions: 0, level: 0, rgb: null, pile: 0, grains: [], bubbles: [], fizz: 0, foam: 0, temp: 22, gasLabel: null, gasAlpha: 0, pour: null,
-        turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null, microbes: 0, steam: [], steaming: 0, lather: 0 });
+        turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null, microbes: 0, steam: [], steaming: 0, lather: 0, cloud: null });
       kick();
     },
     // Смеси: задать видимое состояние целиком (то, что не передано, не меняется).

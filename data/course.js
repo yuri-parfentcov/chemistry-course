@@ -9,8 +9,13 @@ import * as m5 from "./lessons/m5.js";
 import * as m6 from "./lessons/m6.js";
 import * as m7 from "./lessons/m7.js";
 import * as m8 from "./lessons/m8.js";
+import * as m9 from "./lessons/m9.js";
+import * as m10 from "./lessons/m10.js";
+import * as m11 from "./lessons/m11.js";
+import * as m12 from "./lessons/m12.js";
+import * as m13 from "./lessons/m13.js";
 
-export const LESSON_PACKS = [m1, m2, m3, m4, m5, m6, m7, m8];
+export const LESSON_PACKS = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13];
 
 export const MODULES = [
   { n: 1, title: "Вещества и смеси", lessons: ["creek-water", "salt-sand", "fuel-water"], plan: [] },
@@ -21,11 +26,11 @@ export const MODULES = [
   { n: 6, title: "Растворы и концентрации", lessons: ["vinegar-essence", "saline", "antifreeze"], plan: [] },
   { n: 7, title: "Кислоты, основания, pH", lessons: ["cabbage-indicator", "soil-lime", "shampoo-ph"], plan: [] },
   { n: 8, title: "Соли, осадки, жёсткость воды", lessons: ["limescale", "hard-water-soap"], plan: ["высолы на кирпиче 🔨"] },
-  { n: 9, title: "Окисление и восстановление", plan: ["ржавчина на кузове 🚗", "отбеливатель 🧽", "батарейка из лимона 🔋"] },
-  { n: 10, title: "Энергия и скорость реакций", plan: ["химическая грелка ⚠️", "застывание цемента 🔨", "порча еды 🍳"] },
-  { n: 11, title: "Органика I", plan: ["топливо 🔋", "спирты и антисептики 💊", "запахи и эфиры 🧴"] },
-  { n: 12, title: "Органика II: полимеры и жизнь", plan: ["мыло 🧴", "пластик 🌍", "эпоксидка 🔨"] },
-  { n: 13, title: "Безопасность", plan: ["что нельзя смешивать ⚠️", "знаки опасности ⚠️", "огнетушители ⚠️"] }
+  { n: 9, title: "Окисление и восстановление", lessons: ["lemon-battery", "zinc-protection", "bleach-peroxide"], plan: [] },
+  { n: 10, title: "Энергия и скорость реакций", lessons: ["hand-warmers", "fridge-rate", "car-catalyst"], plan: [] },
+  { n: 11, title: "Органика I: топливо, спирты, ароматы", lessons: ["fuels", "antiseptic", "esters"], plan: [] },
+  { n: 12, title: "Органика II: мыло и полимеры", lessons: ["soap-making", "plastics"], plan: ["эпоксидка 🔨"] },
+  { n: 13, title: "Безопасность", lessons: ["never-mix", "hazard-labels", "fire-safety"], plan: [] }
 ];
 
 const PILOT = {

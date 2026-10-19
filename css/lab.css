@@ -184,6 +184,81 @@
 .mix-board .mix-c b { color: var(--accent); font-size: 1.15rem; }
 @media (max-width: 640px) { .mixer { grid-template-columns: 1fr; } }
 
+/* ───── Гальванический элемент ───── */
+.cell-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.cell-controls label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: .92rem; }
+.cell-controls select {
+  font: inherit; padding: 6px 8px; border-radius: 8px; border: 2px solid var(--border); background: var(--bg); color: var(--ink);
+}
+.cells-k { display: flex; align-items: center; gap: 8px; }
+.cells-k output { font-weight: 800; font-size: 1.2rem; min-width: 1ch; text-align: center; }
+.cell-svg { width: 100%; height: auto; margin-top: 10px; }
+.cell-svg .wire { fill: none; stroke: var(--muted); stroke-width: 3; }
+.cell-svg .cell-lbl { text-anchor: middle; font: 700 14px system-ui, sans-serif; fill: var(--ink); }
+.cell-svg .volt { text-anchor: middle; font: 800 20px system-ui, sans-serif; fill: var(--accent); }
+.cell-svg .electrons { text-anchor: middle; font: 700 15px system-ui, sans-serif; fill: #2f7de1; }
+.cell-svg .led { fill: var(--bg-2); stroke: var(--glass); stroke-width: 2; }
+.cell-svg .led.on { fill: #ffd84d; stroke: #f0b24a; filter: drop-shadow(0 0 10px #ffd84d); }
+.cell-svg .anode { animation: dissolve 1.6s ease-in-out infinite; }
+@keyframes dissolve { 50% { opacity: .55; } }
+.cell-status { font-weight: 600; min-height: 3em; }
+
+/* ───── Скорость реакции ───── */
+.rate canvas { width: 100%; height: auto; aspect-ratio: 560 / 300; display: block; background: var(--bg); border-radius: var(--radius); }
+.rate-board { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 10px 0; }
+.rate-board b { font-size: 1.6rem; color: var(--accent); }
+.rate-board small { color: var(--muted); }
+.rate-controls { display: grid; gap: 10px; }
+.rate-controls label { display: flex; flex-direction: column; gap: 4px; }
+.rate-controls input[type="range"] { accent-color: var(--accent); }
+.rate-controls .cat { flex-direction: row; align-items: center; gap: 8px; font-weight: 600; }
+.presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.rate-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .88rem; color: var(--muted); }
+
+/* ───── Сортировщик ───── */
+.sort-items { display: flex; flex-wrap: wrap; gap: 8px; }
+.sort-item {
+  display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer;
+  background: var(--card); color: var(--ink); border: 2px solid var(--border); border-radius: 999px; padding: 6px 14px;
+}
+.sort-item.picked { border-color: var(--amber); background: var(--accent-soft); }
+.si-icon { font-size: 1.2rem; }
+.sort-msg { font-weight: 600; min-height: 1.6em; }
+.sort-msg.ok { color: var(--ok); }
+.sort-msg.bad { color: var(--bad); }
+.sort-bins { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+.sort-bin {
+  display: flex; flex-direction: column; gap: 6px; text-align: left; font: inherit; cursor: pointer;
+  background: var(--bg); color: var(--ink); border: 2px dashed var(--border); border-radius: 12px; padding: 10px; min-height: 90px;
+}
+.sort-bin:hover { border-color: var(--accent); }
+.sb-head { display: flex; gap: 8px; align-items: center; }
+.sb-icon { font-size: 1.5rem; }
+.sb-list { display: flex; flex-direction: column; gap: 3px; }
+.sb-item { font-size: .88rem; background: var(--ok-soft); border-radius: 6px; padding: 2px 8px; }
+.sort-bin.shake { animation: shake .35s; border-color: var(--bad); }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+/* ───── Парфюмер ───── */
+.cmb-pick { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 10px; align-items: start; margin-bottom: 12px; }
+.cmb-col { display: flex; flex-direction: column; gap: 6px; }
+.cmb-col h3 { margin: 0; }
+.cmb-plus { font-size: 1.6rem; color: var(--muted); align-self: center; }
+.cmb-opt {
+  display: flex; flex-direction: column; text-align: left; font: inherit; cursor: pointer;
+  background: var(--bg); color: var(--ink); border: 2px solid var(--border); border-radius: 10px; padding: 6px 10px;
+}
+.cmb-opt small { color: var(--muted); overflow-wrap: anywhere; }
+.cmb-opt.chosen { border-color: var(--accent); background: var(--accent-soft); }
+.cmb-card { display: flex; gap: 14px; align-items: center; background: var(--ok-soft); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
+.cmb-card p { margin: 4px 0 0; }
+.cmb-icon { font-size: 2.4rem; }
+.cmb-found { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+/* ───── Мицелла ───── */
+.micelle canvas { width: 100%; height: auto; aspect-ratio: 560 / 300; display: block; border-radius: var(--radius); margin-bottom: 10px; }
+.micelle-msg { font-weight: 600; min-height: 3em; }
+
 /* ───── Конструктор атома ───── */
 .atom-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 .atom-svg { width: 100%; max-width: 360px; display: block; margin: 0 auto; }

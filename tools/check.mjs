@@ -83,6 +83,13 @@ for (const l of Object.values(LESSONS)) {
         p.steps.forEach((s, i) => { if (!Number.isFinite(s.answer) || s.answer <= 0) fail(`${l.id}: шаг расчёта ${i + 1} дал ${s.answer}`); });
       }
     }
+    if (step.type === "sort") {
+      const bins = new Set(step.sort.bins.map((b) => b.id));
+      step.sort.items.forEach((it) => { if (!bins.has(it.bin)) fail(`${l.id}: карточка ${it.id} ссылается на несуществующую корзину ${it.bin}`); });
+    }
+    if (step.type === "combine") {
+      step.goals.forEach((g) => { if (!step.combine.results[g.key]) fail(`${l.id}: комбинатор не знает пару ${g.key}`); });
+    }
     if (step.verdict && !l.steps.some((s) => s.type === "hypothesis" && s.options.some((o) => o.ok))) fail(`${l.id}: verdict без гипотезы с верным ответом`);
   }
 }

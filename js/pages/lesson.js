@@ -15,6 +15,11 @@ import { createAtom } from "../engine/atom.js";
 import { createBuilder } from "../engine/builder.js";
 import { createBalancer } from "../engine/balancer.js";
 import { createMixer } from "../engine/mixer.js";
+import { createCell } from "../engine/cell.js";
+import { createRate } from "../engine/rate.js";
+import { createSort } from "../engine/sort.js";
+import { createCombine } from "../engine/combine.js";
+import { createMicelle } from "../engine/micelle.js";
 import { equationHTML, } from "../engine/equation.js";
 import { formulaHTML } from "../engine/formula.js";
 
@@ -200,6 +205,36 @@ const RENDER = {
       }
     });
     if (reaction && t.reached.has("reaction")) showMicro(false);
+  },
+
+  // Гальванический элемент: цели с test(состояние: a, b, el, cells, voltage, anode, led)
+  cell(step, i) {
+    const t = trainer(step, i, { work: '<div id="cellRoot"></div>' });
+    createCell($("#cellRoot", stage), { ...step.cell, onChange(st) { step.goals.forEach((g) => { if (g.test(st)) t.goal(g.id); }); } });
+  },
+
+  // Скорость реакции: цели с test(состояние: T, conc, catalyst, rate)
+  rate(step, i) {
+    const t = trainer(step, i, { work: '<div id="rateRoot"></div>' });
+    createRate($("#rateRoot", stage), step.sim, { onChange(st) { step.goals.forEach((g) => { if (g.test(st)) t.goal(g.id); }); } });
+  },
+
+  // Сортировка: одна цель — разложить всё
+  sort(step, i) {
+    const t = trainer({ ...step, goals: [{ id: "all", text: step.goalText || "Разложите все карточки по корзинам" }] }, i, { work: '<div id="sortRoot"></div>' });
+    createSort($("#sortRoot", stage), step.sort, { onProgress(p) { if (p.done === p.total) t.goal("all"); } });
+  },
+
+  // Комбинатор: цели { id, key } — найти конкретную пару
+  combine(step, i) {
+    const t = trainer(step, i, { work: '<div id="cmbRoot"></div>' });
+    createCombine($("#cmbRoot", stage), step.combine, { onResult(key) { step.goals.filter((g) => g.key === key).forEach((g) => t.goal(g.id)); } });
+  },
+
+  // Мыло и капля жира: цели { id, event }
+  micelle(step, i) {
+    const t = trainer(step, i, { work: '<div id="micRoot"></div>' });
+    createMicelle($("#micRoot", stage), { onEvent(ev) { step.goals.filter((g) => g.event === ev).forEach((g) => t.goal(g.id)); } });
   },
 
   // Смеситель растворов: цели с test(состояние: stock, water, total, solute, c)

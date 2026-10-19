@@ -72,7 +72,7 @@ export function createLab(root, { substances, tools = [], onEvent = () => {} }) 
   let busy = false;
 
   const ph = () => mixturePH(Object.entries(units).map(([id, n]) => ({ sub: SUBSTANCES[id], units: n })));
-  const state = () => ({ units: { ...units }, ph: ph() });
+  const state = () => ({ units: { ...units }, ph: ph(), temp: beaker.temp });
   const emit = (ev) => onEvent(ev, state());
 
   function note(html, kind = "") {
@@ -87,6 +87,20 @@ export function createLab(root, { substances, tools = [], onEvent = () => {} }) 
   function refresh() {
     const scene = {};
     const p = ph();
+    // цвет жидкости — смесь цветов тех жидкостей, что ещё не прореагировали (краситель весомее)
+    if (beaker.hasLiquid) {
+      let w = 0;
+      const sum = [0, 0, 0];
+      for (const [id, n] of Object.entries(units)) {
+        const s = SUBSTANCES[id];
+        if (!(n > 0) || s.state !== "liquid") continue;
+        const k = n * (s.dye ? 4 : 1);
+        const c = parseInt(s.color.slice(1), 16);
+        sum[0] += ((c >> 16) & 255) * k; sum[1] += ((c >> 8) & 255) * k; sum[2] += (c & 255) * k;
+        w += k;
+      }
+      scene.rgb = w ? "#" + sum.map((v) => Math.round(v / w).toString(16).padStart(2, "0")).join("") : SUBSTANCES.water.color;
+    }
     if (units.cabbage > 0 && beaker.hasLiquid && p !== null) scene.rgb = cabbageColor(p);
     let sed = 0, sedColor = null;
     for (const [id, n] of Object.entries(units)) {
@@ -106,12 +120,14 @@ export function createLab(root, { substances, tools = [], onEvent = () => {} }) 
     for (const r of REACTIONS) {
       if (!r.reactants.length || (r.condition === "heat" && !heating)) continue;
       if (!r.reactants.every((id) => units[id] > 0)) continue;
+      if (r.catalyst && !(units[r.catalyst] > 0)) continue;
       const n = Math.min(...r.reactants.map((id) => units[id]));
       r.reactants.forEach((id) => { units[id] -= n; });
       for (const [pid, k] of Object.entries(r.produces || {})) units[pid] = (units[pid] || 0) + k * n;
       if (r.effects.gas) beaker.fizz((r.effects.gasPower || 0.9) * n, r.effects.gas);
       if (r.effects.heat) beaker.addHeat(r.effects.heat * n);
-      note(esc(r.observe), "reaction");
+      if (r.effects.hazard) beaker.cloud(r.effects.hazard);
+      note(esc(r.observe), r.effects.hazard ? "danger" : "reaction");
       emit({ type: "reaction", reaction: r });
       reacted = true;
     }
@@ -158,6 +174,7 @@ export function createLab(root, { substances, tools = [], onEvent = () => {} }) 
       }
       beaker.sprinkle(s.color, true);
       if (!tryReactions(id)) {
+        if (s.dissolveHeat) beaker.addHeat(s.dissolveHeat);
         note(esc(s.inWater || `Добавили: ${s.name.toLowerCase()}.`));
         emit({ type: "dissolve", id });
       }

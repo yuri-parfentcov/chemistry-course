@@ -185,5 +185,86 @@ export const REACTIONS = [
     },
     effects: { precipitate: "белый осадок" },
     observe: "Вода помутнела, выпал белый осадок: стиральная сода связала кальций. Вода стала мягкой."
+  },  {
+    id: "bleach-tea",
+    reactants: ["tea", "bleach"],
+    equation: {
+      left: [{ f: "NaOCl", k: 1, name: "гипохлорит" }, { f: "C15H14O6", k: 1, name: "краситель чая (катехин)" }],
+      right: [{ f: "NaCl", k: 1, name: "соль" }, { f: "C15H14O7", k: 1, name: "бесцветный продукт" }]
+    },
+    effects: {},
+    observe: "Чай обесцветился! Белизна окислила молекулы красителя: они больше не поглощают свет."
+  },
+  {
+    id: "peroxide-catalase",
+    reactants: ["peroxide"],
+    catalyst: "yeast",
+    equation: {
+      left: [{ f: "H2O2", k: 2, name: "перекись водорода" }],
+      right: [{ f: "H2O", k: 2, name: "вода" }, { f: "O2", k: 1, name: "кислород", gas: true }]
+    },
+    effects: { gas: "O₂" },
+    observe: "Перекись вскипела пеной! Фермент из картошки разлагает её на воду и кислород. Картошка при этом не расходуется: это катализатор."
+  },
+  {
+    id: "handwarmer",
+    reactants: ["acetatepad", "seed"],
+    produces: { crystals: 1 },
+    equation: {
+      left: [{ f: "CH3COONa", k: 1, name: "ацетат в растворе" }],
+      right: [{ f: "CH3COONa", k: 1, name: "ацетат-кристаллы" }]
+    },
+    effects: { heat: 18 },
+    observe: "От одной крупинки по всей жидкости побежали кристаллы — и стакан стал горячим! Кристаллизация отдаёт тепло."
+  },
+  {
+    id: "saponification",
+    reactants: ["fat", "lye"],
+    condition: "heat",
+    produces: { soap: 1 },
+    equation: {
+      left: [{ f: "C57H110O6", k: 1, name: "жир (тристеарин)" }, { f: "NaOH", k: 3, name: "щёлочь" }],
+      right: [{ f: "C3H8O3", k: 1, name: "глицерин" }, { f: "C17H35COONa", k: 3, name: "мыло" }]
+    },
+    effects: {},
+    observe: "Масло и щёлочь при нагреве превратились в густую массу — это мыло и глицерин. Попробуйте теперь пену!"
+  },
+  {
+    id: "bleach-acid",
+    reactants: ["bleach", "toiletacid"],
+    equation: {
+      left: [{ f: "NaOCl", k: 1, name: "белизна" }, { f: "HCl", k: 2, name: "кислотное средство" }],
+      right: [{ f: "NaCl", k: 1, name: "соль" }, { f: "Cl2", k: 1, name: "хлор", gas: true }, { f: "H2O", k: 1, name: "вода" }]
+    },
+    effects: { gas: "Cl₂", hazard: "#c8d94a" },
+    observe: "⚠️ Над стаканом жёлто-зелёный газ — это хлор! В реальной ванной такой «коктейль» вызывает ожог лёгких. Никогда не смешивайте хлорные средства с кислотными."
+  },
+  {
+    id: "bleach-ammonia",
+    reactants: ["bleach", "ammonia"],
+    equation: {
+      left: [{ f: "NaOCl", k: 1, name: "белизна" }, { f: "NH3", k: 1, name: "нашатырь" }],
+      right: [{ f: "NH2Cl", k: 1, name: "хлорамин" }, { f: "NaOH", k: 1, name: "щёлочь" }]
+    },
+    effects: { hazard: "#dfe8a8" },
+    observe: "⚠️ Выделяются пары хлораминов — едкие и ядовитые. Белизна + нашатырь (или средства для стёкол с аммиаком) — опасная пара!"
+  },  {
+    id: "bleach-vinegar",
+    reactants: ["bleach", "vinegar"],
+    equation: {
+      left: [{ f: "NaOCl", k: 1, name: "белизна" }, { f: "CH3COOH", k: 1, name: "уксус" }],
+      right: [{ f: "HOCl", k: 1, name: "хлорноватистая кислота" }, { f: "CH3COONa", k: 1, name: "ацетат натрия" }]
+    },
+    effects: { hazard: "#d6e27a" },
+    observe: "⚠️ Запах хлора усилился: кислота превращает гипохлорит в хлорноватистую кислоту, и та выделяет хлор. Уксус с белизной — тоже опасная пара."
+  },  {
+    id: "soda-hcl",
+    reactants: ["soda", "toiletacid"],
+    equation: {
+      left: [{ f: "NaHCO3", k: 1, name: "сода" }, { f: "HCl", k: 1, name: "соляная кислота" }],
+      right: [{ f: "NaCl", k: 1, name: "соль" }, { f: "H2O", k: 1, name: "вода" }, { f: "CO2", k: 1, name: "углекислый газ", gas: true }]
+    },
+    effects: { gas: "CO₂" },
+    observe: "Бурное шипение: сода гасит соляную кислоту, выделяется углекислый газ. Не опасно, но и чистящей силы у смеси уже нет."
   }
 ];
