@@ -1,5 +1,5 @@
 // Модуль 9. Окисление и восстановление
-import { fmt, pick } from "../../js/core/util.js?v=17";
+import { fmt, pick } from "../../js/core/util.js?v=19";
 
 export const LESSONS = [
   {

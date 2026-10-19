@@ -1,23 +1,9 @@
 // Интерактивные демонстрации к теории: масштаб, ионы, взаимодействие атомов, опыт Резерфорда.
 // createDemo(root, kind, { onEvent }) — onEvent(строка) сообщает уроку, что ученик что-то увидел.
-import { $, $$, esc, ease, lerp, reducedMotion } from "../core/util.js?v=17";
-import { shellsOf } from "./atom.js?v=17";
+import { $, $$, esc, ease, lerp, reducedMotion, animate } from "../core/util.js?v=19";
+import { shellsOf } from "./atom.js?v=19";
 
 const NS = "http://www.w3.org/2000/svg";
-
-// Плавная анимация 0 → 1 за ms миллисекунд; при «уменьшить движение» — сразу в конец
-function animate(ms, step) {
-  return new Promise((done) => {
-    if (reducedMotion()) { step(1); return done(); }
-    const t0 = performance.now();
-    const tick = (now) => {
-      const t = Math.min(1, (now - t0) / ms);
-      step(ease(t));
-      if (t < 1) requestAnimationFrame(tick); else done();
-    };
-    requestAnimationFrame(tick);
-  });
-}
 
 export function createDemo(root, kind, { onEvent = () => {} } = {}) {
   const make = DEMOS[kind];

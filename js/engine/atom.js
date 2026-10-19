@@ -1,7 +1,7 @@
 // Конструктор атома: протоны, нейтроны, электроны → какой это элемент, ион или изотоп.
 // Рядом мини-таблица Менделеева: в ней подсвечивается собранный атом, клик по клетке — справка.
-import { PERIODIC, BY_Z, ISOTOPE_NOTES } from "../../data/periodic.js?v=17";
-import { $, esc } from "../core/util.js?v=17";
+import { PERIODIC, BY_Z, ISOTOPE_NOTES } from "../../data/periodic.js?v=19";
+import { $, esc } from "../core/util.js?v=19";
 
 const SHELLS = [2, 8, 8, 18];           // упрощённая схема заполнения для первых 20 элементов
 const SHELL_R = [62, 98, 134, 166];
@@ -17,6 +17,41 @@ export function shellsOf(e) {
     left -= cap;
   }
   return out;
+}
+
+// Разметка SVG атома: слои с электронами (внешние — янтарные) и ядро из протонов и нейтронов.
+// Возвращает { html, viewBox } — «камера» приближается, чтобы маленький атом не терялся.
+export function atomMarkup(st) {
+  const shells = shellsOf(st.e);
+  const outer = shells.length - 1;
+  let html = "";
+  SHELL_R.slice(0, Math.max(1, shells.length)).forEach((r) => {
+    html += `<circle r="${r}" class="shell"/>`;
+  });
+  shells.forEach((count, si) => {
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 - Math.PI / 2 + si * 0.4;
+      html += `<circle class="electron ${si === outer ? "outer" : ""}" r="7" cx="${(SHELL_R[si] * Math.cos(a)).toFixed(1)}" cy="${(SHELL_R[si] * Math.sin(a)).toFixed(1)}"/>`;
+    }
+  });
+  // ядро: частицы по спирали подсолнуха, протоны и нейтроны вперемешку
+  const total = st.p + st.n;
+  const parts = [];
+  let placedP = 0;
+  for (let i = 0; i < total; i++) {
+    // равномерно перемешиваем: протон, если их пока «недостаёт» до нужной доли
+    const isP = placedP < st.p && (placedP + 1) / (i + 1) <= st.p / total + 1e-9;
+    const last = total - i === st.p - placedP;
+    if (isP || last) { parts.push("p"); placedP++; } else parts.push("n");
+  }
+  parts.forEach((k, i) => {
+    const r = 5.2 * Math.sqrt(i + 0.5);
+    const a = i * GOLDEN;
+    html += `<circle class="nucleon ${k}" r="6.5" cx="${(r * Math.cos(a)).toFixed(1)}" cy="${(r * Math.sin(a)).toFixed(1)}"/>`;
+  });
+  // приближаем «камеру», чтобы маленький атом не терялся
+  const R = SHELL_R[Math.max(0, shells.length - 1)] + 22;
+  return { html, viewBox: `${-R} ${-R} ${2 * R} ${2 * R}` };
 }
 
 export function createAtom(root, { start = { p: 1, n: 0, e: 1 }, table = true, onChange = () => {} } = {}) {
@@ -46,37 +81,9 @@ export function createAtom(root, { start = { p: 1, n: 0, e: 1 }, table = true, o
   const info = $(".atom-info", root);
 
   function drawAtom() {
-    const shells = shellsOf(st.e);
-    const outer = shells.length - 1;
-    let html = "";
-    SHELL_R.slice(0, Math.max(1, shells.length)).forEach((r) => {
-      html += `<circle r="${r}" class="shell"/>`;
-    });
-    shells.forEach((count, si) => {
-      for (let i = 0; i < count; i++) {
-        const a = (i / count) * Math.PI * 2 - Math.PI / 2 + si * 0.4;
-        html += `<circle class="electron ${si === outer ? "outer" : ""}" r="7" cx="${(SHELL_R[si] * Math.cos(a)).toFixed(1)}" cy="${(SHELL_R[si] * Math.sin(a)).toFixed(1)}"/>`;
-      }
-    });
-    // ядро: частицы по спирали подсолнуха, протоны и нейтроны вперемешку
-    const total = st.p + st.n;
-    const parts = [];
-    let placedP = 0;
-    for (let i = 0; i < total; i++) {
-      // равномерно перемешиваем: протон, если их пока «недостаёт» до нужной доли
-      const isP = placedP < st.p && (placedP + 1) / (i + 1) <= st.p / total + 1e-9;
-      const last = total - i === st.p - placedP;
-      if (isP || last) { parts.push("p"); placedP++; } else parts.push("n");
-    }
-    parts.forEach((k, i) => {
-      const r = 5.2 * Math.sqrt(i + 0.5);
-      const a = i * GOLDEN;
-      html += `<circle class="nucleon ${k}" r="6.5" cx="${(r * Math.cos(a)).toFixed(1)}" cy="${(r * Math.sin(a)).toFixed(1)}"/>`;
-    });
+    const { html, viewBox } = atomMarkup(st);
     svg.innerHTML = html;
-    // приближаем «камеру», чтобы маленький атом не терялся
-    const R = SHELL_R[Math.max(0, shells.length - 1)] + 22;
-    svg.setAttribute("viewBox", `${-R} ${-R} ${2 * R} ${2 * R}`);
+    svg.setAttribute("viewBox", viewBox);
   }
 
   function describe() {

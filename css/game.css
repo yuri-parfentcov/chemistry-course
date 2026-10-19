@@ -1,0 +1,43 @@
+/* Игра «Атомная мастерская» */
+#game h1 { margin: 8px 0 6px; }
+.stars { color: var(--amber); letter-spacing: 1px; white-space: nowrap; }
+.stars .dim { color: var(--border); }
+.total { font-size: 1.05rem; }
+
+.chapters { display: grid; gap: 12px; }
+.chapter { display: flex; gap: 16px; align-items: flex-start; text-decoration: none; color: inherit; margin: 0; }
+a.chapter:hover { border-color: var(--accent); }
+.chapter.locked { opacity: .7; }
+.ch-icon { font-size: 2.2rem; line-height: 1; }
+.ch-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ch-text small { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.ch-text b { font-size: 1.15rem; }
+.ch-foot { margin-top: 6px; }
+
+.levels { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.level { display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: inherit; margin: 0; padding: 14px; }
+a.level:hover { border-color: var(--accent); }
+.level.locked { opacity: .5; }
+.lv-n { font-weight: 800; color: var(--accent); }
+.lv-title { font-weight: 600; }
+
+.story { font-size: 1.05rem; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; margin: 8px 0; }
+.toolbar .tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.hint { background: var(--accent-soft); border-radius: 10px; padding: 8px 12px; }
+#board.won { pointer-events: none; opacity: .85; }
+.win h2 { margin-top: 0; }
+.win .stars { font-size: 1.4rem; }
+
+/* глава 1: сборка атомов */
+.tray { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; background: var(--card); border: 1px dashed var(--glass); border-radius: 12px; padding: 10px 14px; }
+.tray-item { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.forge-atoms { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+.forge-atom { margin: 12px 0 0; }
+.forge-atom.done { border-color: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
+.order { margin: 0 0 6px; }
+.order-sym { font-size: 1.4rem; }
+.forge-svg { max-width: 220px; }
+.forge-status { min-height: 2.6em; margin: 6px 0; }
+.forge-status.ok { color: var(--ok); font-weight: 700; }
+.forge-status.warn { color: var(--bad); }

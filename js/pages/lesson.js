@@ -1,28 +1,29 @@
 // Плеер урока-миссии: шаги по порядку, «Дальше» открывается, когда шаг выполнен.
 // Шаги-тренажёры (lab, separate, atom, build, balance, micro) показывают список целей
 // и открывают теорию, когда цели выполнены.
-import { LESSONS } from "../../data/course.js?v=17";
-import { REACTIONS } from "../../data/reactions.js?v=17";
-import { SPHERES } from "../../data/spheres.js?v=17";
-import { CARDS } from "../../data/cards.js?v=17";
-import { $, $$, esc } from "../core/util.js?v=17";
-import { completeLesson, lessonStatus, nextLesson } from "../core/progress.js?v=17";
-import { createLab } from "../engine/lab.js?v=17";
-import { createSeparator } from "../engine/separate.js?v=17";
-import { createMicro } from "../engine/lab-micro.js?v=17";
-import { createCalc } from "../engine/calc.js?v=17";
-import { createAtom } from "../engine/atom.js?v=17";
-import { createBuilder } from "../engine/builder.js?v=17";
-import { createBalancer } from "../engine/balancer.js?v=17";
-import { createMixer } from "../engine/mixer.js?v=17";
-import { createCell } from "../engine/cell.js?v=17";
-import { createRate } from "../engine/rate.js?v=17";
-import { createSort } from "../engine/sort.js?v=17";
-import { createCombine } from "../engine/combine.js?v=17";
-import { createMicelle } from "../engine/micelle.js?v=17";
-import { createDemo } from "../engine/demos.js?v=17";
-import { equationHTML, } from "../engine/equation.js?v=17";
-import { formulaHTML } from "../engine/formula.js?v=17";
+import { LESSONS } from "../../data/course.js?v=19";
+import { REACTIONS } from "../../data/reactions.js?v=19";
+import { SPHERES } from "../../data/spheres.js?v=19";
+import { CARDS } from "../../data/cards.js?v=19";
+import { $, $$, esc } from "../core/util.js?v=19";
+import { completeLesson, lessonStatus, nextLesson } from "../core/progress.js?v=19";
+import { createLab } from "../engine/lab.js?v=19";
+import { createSeparator } from "../engine/separate.js?v=19";
+import { createMicro } from "../engine/lab-micro.js?v=19";
+import { createCalc } from "../engine/calc.js?v=19";
+import { createAtom } from "../engine/atom.js?v=19";
+import { createBuilder } from "../engine/builder.js?v=19";
+import { createBalancer } from "../engine/balancer.js?v=19";
+import { createMixer } from "../engine/mixer.js?v=19";
+import { createCell } from "../engine/cell.js?v=19";
+import { createRate } from "../engine/rate.js?v=19";
+import { createSort } from "../engine/sort.js?v=19";
+import { createCombine } from "../engine/combine.js?v=19";
+import { createMicelle } from "../engine/micelle.js?v=19";
+import { createDemo } from "../engine/demos.js?v=19";
+import { CHAPTERS } from "../../data/game-levels.js?v=19";
+import { equationHTML, } from "../engine/equation.js?v=19";
+import { formulaHTML } from "../engine/formula.js?v=19";
 
 const id = new URLSearchParams(location.search).get("id");
 const lesson = LESSONS[id];
@@ -361,6 +362,7 @@ const RENDER = {
         <div class="row">
           ${next ? `<a class="btn big" href="lesson.html?id=${next.id}">Следующая миссия: ${esc(next.title)} →</a>` : ""}
           <a class="btn ${next ? "ghost" : "big"}" href="garden.html">💎 Ответить на вопросы</a>
+          ${CHAPTERS.filter((c) => c.unlock === lesson.id && c.levels.length).map((c) => `<a class="btn ghost" href="game.html?ch=${c.id}">🎮 Открыта глава игры «${esc(c.title)}»</a>`).join("")}
           <a class="btn ghost" href="index.html">🗺️ На карту</a>
         </div>
       </section>`;

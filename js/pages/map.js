@@ -1,8 +1,10 @@
 // Карта курса: модули по порядку, миссии, открытые сферы и статистика
-import { MODULES, LESSONS } from "../../data/course.js?v=17";
-import { SPHERES } from "../../data/spheres.js?v=17";
-import { $, esc } from "../core/util.js?v=17";
-import { srs, lessonStatus, openedSpheres, doneCount, ORDER } from "../core/progress.js?v=17";
+import { MODULES, LESSONS } from "../../data/course.js?v=19";
+import { SPHERES } from "../../data/spheres.js?v=19";
+import { $, esc } from "../core/util.js?v=19";
+import { srs, lessonStatus, openedSpheres, doneCount, ORDER, isDone } from "../core/progress.js?v=19";
+import { CHAPTERS } from "../../data/game-levels.js?v=19";
+import { stars } from "../game/store.js?v=19";
 
 const STATUS = {
   available: { icon: "▶", text: "Начать" },
@@ -27,6 +29,19 @@ function render() {
   // следующая непройденная миссия — крупно наверху
   const nextId = ORDER.find((lid) => lessonStatus(lid) === "available");
   $("#pilot").innerHTML = nextId ? missionHTML(LESSONS[nextId]) : `<p>🎓 Все миссии пройдены — курс завершён! Возвращайтесь к коллекции кристаллов, чтобы знания не выветрились.</p>`;
+
+  // игра: сколько глав открыто и звёзд собрано
+  const playable = CHAPTERS.filter((c) => c.levels.length);
+  const open = playable.filter((c) => isDone(c.unlock));
+  const got = playable.reduce((s, c) => s + c.levels.reduce((t, l) => t + stars(l.id), 0), 0);
+  const max = playable.reduce((s, c) => s + c.levels.length * 3, 0);
+  const firstLock = playable.find((c) => !isDone(c.unlock));
+  $("#gameCard").innerHTML = `<a class="mission" href="game.html">
+    <span class="m-sphere">🎮</span>
+    <span class="m-text"><b>Атомная мастерская</b><small>${open.length
+      ? `Открыто глав: ${open.length} из ${CHAPTERS.length}`
+      : `Первая глава откроется после миссии «${esc(LESSONS[firstLock.unlock].title)}»`}</small></span>
+    <span class="m-status">★ ${got} / ${max}</span></a>`;
 
   $("#modules").innerHTML = MODULES.map((m) => {
     const lessons = (m.lessons || []).map((id) => LESSONS[id]);

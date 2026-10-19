@@ -7,6 +7,9 @@ import { LESSONS, MODULES } from "../data/course.js";
 import { MOLECULES } from "../data/molecules.js";
 import { ELEMENTS } from "../data/elements.js";
 import { isBalanced, sideAtoms, countAtoms } from "../js/engine/formula.js";
+import { CHAPTERS } from "../data/game-levels.js";
+import { BY_Z } from "../data/periodic.js";
+import * as forge from "../js/game/forge.js";
 
 let errors = 0;
 const fail = (msg) => { errors++; console.error("✗ " + msg); };
@@ -110,5 +113,26 @@ for (const m of MOLECULES) {
 }
 if (JSON.stringify(countAtoms("Ca(OH)2")) !== JSON.stringify({ Ca: 1, O: 2, H: 2 })) fail("countAtoms: скобки");
 
-console.log(errors ? `Ошибок: ${errors}` : `✓ Всё сходится: уроков ${Object.keys(LESSONS).length}, реакций ${REACTIONS.length}, карточек ${CARDS.length}`);
+// Игра: уровни решаемы, норма ходов считается
+const ENGINES = { forge };
+let gameLevels = 0;
+const ids = new Set();
+for (const c of CHAPTERS) {
+  if (!LESSONS[c.unlock]) fail(`игра ${c.id}: нет миссии ${c.unlock}`);
+  for (const lv of c.levels) {
+    gameLevels++;
+    if (ids.has(lv.id)) fail(`игра: уровень ${lv.id} повторяется`);
+    ids.add(lv.id);
+    if (c.engine === "forge") {
+      lv.atoms.forEach((a, i) => {
+        if (!BY_Z[a.target.z]) fail(`игра ${lv.id}: нет элемента №${a.target.z}`);
+        if (forge.status(a.start, a.target).done) fail(`игра ${lv.id}: атом ${i + 1} уже готов в начале`);
+      });
+    }
+    const par = ENGINES[c.engine].par(lv);
+    if (!Number.isFinite(par) || par < 1) fail(`игра ${lv.id}: уровень не решается (норма ${par})`);
+  }
+}
+
+console.log(errors ? `Ошибок: ${errors}` : `✓ Всё сходится: уроков ${Object.keys(LESSONS).length}, реакций ${REACTIONS.length}, карточек ${CARDS.length}, уровней игры ${gameLevels}`);
 process.exit(errors ? 1 : 0);

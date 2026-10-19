@@ -1,5 +1,5 @@
 // Модуль 12. Органика II: мыло, полимеры
-import { fmt, pick } from "../../js/core/util.js?v=17";
+import { fmt, pick } from "../../js/core/util.js?v=19";
 
 const PRE = `<pre style="display:inline-block; max-width:100%; overflow-x:auto; text-align:left; margin:0">`;
 

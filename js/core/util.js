@@ -22,6 +22,20 @@ export const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 
 
 export const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// Плавная анимация 0 → 1 за ms миллисекунд; при «уменьшить движение» — сразу в конец
+export function animate(ms, step) {
+  return new Promise((done) => {
+    if (reducedMotion()) { step(1); return done(); }
+    const t0 = performance.now();
+    const tick = (now) => {
+      const t = Math.min(1, (now - t0) / ms);
+      step(ease(t));
+      if (t < 1) requestAnimationFrame(tick); else done();
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
 // Число по-русски: запятая, не больше digits знаков после неё
 export const fmt = (n, digits = 2) => n.toLocaleString("ru-RU", { maximumFractionDigits: digits });
 

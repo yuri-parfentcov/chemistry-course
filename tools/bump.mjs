@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
-const html = ["index.html", "lesson.html", "garden.html"].map((f) => join(ROOT, f));
+const html = ["index.html", "lesson.html", "garden.html", "game.html"].map((f) => join(ROOT, f));
 const cur = Number(readFileSync(html[1], "utf8").match(/\?v=(\d+)/)?.[1] || 0);
 const v = Number(process.argv[2]) || cur + 1;
 
