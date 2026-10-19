@@ -43,7 +43,7 @@
 .checklist li.ok .box::after { content: "✓"; color: #fff; font-weight: 700; }
 
 /* ───── Лаборатория ───── */
-.lab { display: grid; grid-template-columns: 200px 1fr; grid-template-areas: "shelf bench" "log log"; gap: 16px; }
+.lab { display: grid; grid-template-columns: 200px minmax(0, 1fr); grid-template-areas: "shelf bench" "log log"; gap: 16px; }
 .shelf { grid-area: shelf; display: flex; flex-direction: column; gap: 8px; }
 .bench {
   grid-area: bench; display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -64,8 +64,8 @@
   background: linear-gradient(to top, var(--fill) 70%, transparent 70%);
 }
 .jar-glass.solid { background: radial-gradient(circle at 30% 80%, var(--fill) 2px, transparent 3px) 0 0 / 7px 7px, linear-gradient(to top, var(--fill) 55%, transparent 55%); }
-.jar-name { font-weight: 600; font-size: .95rem; line-height: 1.2; }
-.jar-formula { font-size: .85rem; color: var(--muted); }
+.jar-name { font-weight: 600; font-size: .95rem; line-height: 1.2; overflow-wrap: anywhere; }
+.jar-formula { font-size: .85rem; color: var(--muted); overflow-wrap: anywhere; line-height: 1.25; }
 .lab-log { grid-area: log; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .lab-log li { padding: 8px 12px; border-radius: 10px; background: var(--bg); border-left: 4px solid var(--border); font-size: .95rem; }
 .lab-log li:first-child { border-left-color: var(--accent); }
@@ -73,8 +73,9 @@
 .lab-log li.hint { background: var(--bad-soft); border-left-color: var(--amber); }
 .lab-log li:not(:first-child) { opacity: .7; }
 @media (max-width: 640px) {
-  .lab { grid-template-columns: 1fr; grid-template-areas: "bench" "shelf" "log"; }
-  .shelf { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .lab { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bench" "shelf" "log"; }
+  .shelf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jar { min-width: 0; }
 }
 
 /* ───── Лупа ───── */
@@ -158,6 +159,30 @@
 .product { background: var(--ok-soft); border: 1px solid var(--ok); border-radius: 999px; padding: 2px 12px; font-size: .9rem; font-weight: 600; }
 .lab-log li.danger { background: var(--bad-soft); border-left-color: var(--bad); font-weight: 700; }
 @media (max-width: 640px) { .lab.sep { grid-template-areas: "bench" "shelf" "products" "log"; } }
+
+/* ───── pH-полоска в журнале ───── */
+.strip { display: inline-block; width: 14px; height: 22px; border-radius: 3px; vertical-align: -6px; margin-right: 6px; border: 1px solid var(--atom-stroke); }
+
+/* ───── Смеситель растворов ───── */
+.mixer { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; align-items: center; }
+.mix-row { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.mix-name small { color: var(--muted); }
+.mix-row input[type="range"] { width: 100%; accent-color: var(--accent); }
+.mix-num { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+.mix-num input {
+  width: 110px; font: inherit; padding: 6px 8px; border-radius: 8px;
+  border: 2px solid var(--border); background: var(--bg); color: var(--ink);
+}
+.mix-num input:focus { outline: none; border-color: var(--accent); }
+.mix-view { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.mix-svg { width: 150px; height: auto; }
+.mix-glass { fill: none; stroke: var(--glass); stroke-width: 3; }
+.mix-liquid { transition: y .2s, height .2s, fill-opacity .2s; }
+.mix-board { width: 100%; display: grid; gap: 4px; }
+.mix-board div { display: flex; justify-content: space-between; gap: 10px; background: var(--bg); border-radius: 8px; padding: 4px 10px; }
+.mix-board span { color: var(--muted); }
+.mix-board .mix-c b { color: var(--accent); font-size: 1.15rem; }
+@media (max-width: 640px) { .mixer { grid-template-columns: 1fr; } }
 
 /* ───── Конструктор атома ───── */
 .atom-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }

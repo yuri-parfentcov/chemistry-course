@@ -14,6 +14,7 @@ import { createCalc } from "../engine/calc.js";
 import { createAtom } from "../engine/atom.js";
 import { createBuilder } from "../engine/builder.js";
 import { createBalancer } from "../engine/balancer.js";
+import { createMixer } from "../engine/mixer.js";
 import { equationHTML, } from "../engine/equation.js";
 import { formulaHTML } from "../engine/formula.js";
 
@@ -161,35 +162,52 @@ const RENDER = {
     complete(i);
   },
 
-  // Опыт с реакцией: цели вида { event: "dissolve", substance } | { event: "reaction" } | { event: "micro" }
+  // Опыт в стакане. Цели: { event: "dissolve" | "reaction" | "ph" | "heat", substance?, reaction? }
+  // или { test(событие, состояние) }. Если у реакции урока есть сценарий «лупы», он открывается
+  // после реакции (цель с id "micro" — досмотреть его).
   lab(step, i) {
-    const reaction = REACTIONS.find((r) => r.id === step.reaction);
-    const t = trainer({ ...step, verdict: true }, i, { work: '<div id="labRoot"></div>' });
-    $("#explainExtra", stage).innerHTML = `<h2>Что видно в лупу</h2><div id="microRoot"></div><h3>Уравнение реакции</h3>${equationHTML(reaction.equation)}`;
+    const reaction = step.reaction && REACTIONS.find((r) => r.id === step.reaction);
+    const verdict = step.verdict !== false;
+    const t = trainer({ ...step, verdict }, i, { work: '<div id="labRoot"></div>' });
     let micro = null;
+    if (reaction) {
+      $("#explainExtra", stage).innerHTML = reaction.micro
+        ? `<h2>Что видно в лупу</h2><div id="microRoot"></div><h3>Уравнение реакции</h3>${equationHTML(reaction.equation)}`
+        : `<h3>Уравнение реакции</h3>${equationHTML(reaction.equation)}`;
+    }
     const showMicro = (autoplay) => {
       const box = $("#explain", stage);
       box.hidden = false;
-      $("#verdict", stage).innerHTML = verdictHTML({ verdict: true });
+      $("#verdict", stage).innerHTML = verdictHTML({ verdict });
+      if (!reaction.micro) return;
       if (!micro) micro = createMicro($("#microRoot", stage), reaction.micro, { onDone: () => t.goal("micro") });
       if (autoplay) {
         micro.play();
         setTimeout(() => box.scrollIntoView({ behavior: "smooth", block: "start" }), 1800);
       }
     };
-    const matching = (ev) => step.goals.filter((g) =>
-      g.event === ev.type && (!g.substance || g.substance === ev.id) && (!g.reaction || g.reaction === ev.reaction?.id));
+    const matches = (g, ev, st) => g.test ? g.test(ev, st)
+      : g.event === ev.type && (!g.substance || g.substance === ev.id) && (!g.reaction || g.reaction === ev.reaction?.id);
     createLab($("#labRoot", stage), {
       substances: step.substances,
-      onEvent(ev) {
-        if (ev.type === "reaction" && ev.reaction.id === reaction.id) {
+      tools: step.tools,
+      onEvent(ev, st) {
+        if (reaction && ev.type === "reaction" && ev.reaction.id === reaction.id) {
           const first = !t.reached.has("reaction");
-          showMicro(first);
+          showMicro(first && reaction.micro);
         }
-        matching(ev).forEach((g) => t.goal(g.id));
+        step.goals.forEach((g) => { if (matches(g, ev, st)) t.goal(g.id); });
       }
     });
-    if (t.reached.has("reaction")) showMicro(false);
+    if (reaction && t.reached.has("reaction")) showMicro(false);
+  },
+
+  // Смеситель растворов: цели с test(состояние: stock, water, total, solute, c)
+  mix(step, i) {
+    const t = trainer(step, i, { work: '<div id="mixRoot"></div>' });
+    createMixer($("#mixRoot", stage), step.mixer, {
+      onChange(st) { step.goals.forEach((g) => { if (g.test(st)) t.goal(g.id); }); }
+    });
   },
 
   // Разделение смесей: цели с функцией test(снимок состояния)

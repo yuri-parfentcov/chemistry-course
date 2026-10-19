@@ -1,6 +1,8 @@
 // Реакции. Каждая описана данными: что смешать, уравнение, что видно в колбе (effects)
 // и сценарий для «лупы» (micro): атомы с координатами до и после, связи до и после.
 // Атом сохраняет свой id — так видно, что атомы не исчезают, а меняют партнёров.
+// condition: "heat" — реакция идёт только при нагреве; produces — какие вещества появляются в стакане
+// (например, осадок); effects.precipitate — подпись выпавшего осадка.
 export const REACTIONS = [
   {
     id: "methane-burn",
@@ -120,5 +122,68 @@ export const REACTIONS = [
         "Углекислый газ улетает пузырём. В растворе остаётся ацетат натрия."
       ]
     }
+  },  {
+    id: "antacid",
+    reactants: ["stomach", "antacid"],
+    equation: {
+      left: [{ f: "CaCO3", k: 1, name: "мел (антацид)" }, { f: "HCl", k: 2, name: "соляная кислота" }],
+      right: [{ f: "CaCl2", k: 1, name: "хлорид кальция" }, { f: "H2O", k: 1, name: "вода" }, { f: "CO2", k: 1, name: "углекислый газ", gas: true }]
+    },
+    effects: { gas: "CO₂", heat: 0.5 },
+    observe: "Таблетка шипит и растворяется: карбонат кальция гасит кислоту, выделяется CO₂. Отсюда отрыжка после антацида."
+  },
+  {
+    id: "scale-form",
+    reactants: ["hardwater"],
+    condition: "heat",
+    produces: { scale: 1 },
+    equation: {
+      left: [{ f: "Ca(HCO3)2", k: 1, name: "растворённый кальций" }],
+      right: [{ f: "CaCO3", k: 1, name: "накипь" }, { f: "H2O", k: 1, name: "вода" }, { f: "CO2", k: 1, name: "углекислый газ", gas: true }]
+    },
+    effects: { gas: "CO₂", gasPower: 0.25 },
+    observe: "При кипячении вода помутнела, и на дно выпал белый осадок. Это накипь, карбонат кальция."
+  },
+  {
+    id: "scale-citric",
+    reactants: ["scale", "citric"],
+    equation: {
+      left: [{ f: "CaCO3", k: 3, name: "накипь" }, { f: "C6H8O7", k: 2, name: "лимонная кислота" }],
+      right: [{ f: "Ca3(C6H5O7)2", k: 1, name: "цитрат кальция" }, { f: "H2O", k: 3, name: "вода" }, { f: "CO2", k: 3, name: "углекислый газ", gas: true }]
+    },
+    effects: { gas: "CO₂" },
+    observe: "Накипь зашипела и исчезла: лимонная кислота превратила её в растворимую соль и CO₂."
+  },
+  {
+    id: "scale-vinegar",
+    reactants: ["scale", "vinegar"],
+    equation: {
+      left: [{ f: "CaCO3", k: 1, name: "накипь" }, { f: "CH3COOH", k: 2, name: "уксусная кислота" }],
+      right: [{ f: "Ca(CH3COO)2", k: 1, name: "ацетат кальция" }, { f: "H2O", k: 1, name: "вода" }, { f: "CO2", k: 1, name: "углекислый газ", gas: true }]
+    },
+    effects: { gas: "CO₂" },
+    observe: "Накипь шипит и растворяется в уксусе. Работает, но запах на всю кухню."
+  },
+  {
+    id: "hard-soap",
+    reactants: ["hardwater", "soap"],
+    produces: { scum: 1 },
+    equation: {
+      left: [{ f: "Ca(HCO3)2", k: 1, name: "жёсткая вода" }, { f: "C17H35COONa", k: 2, name: "мыло" }],
+      right: [{ f: "Ca(C17H35COO)2", k: 1, name: "кальциевое мыло" }, { f: "NaHCO3", k: 2, name: "сода" }]
+    },
+    effects: { precipitate: "серые хлопья" },
+    observe: "Мыло не пенится! В воде появились серые хлопья: кальций из жёсткой воды «съел» мыло."
+  },
+  {
+    id: "softening",
+    reactants: ["hardwater", "washsoda"],
+    produces: { scale: 1 },
+    equation: {
+      left: [{ f: "Ca(HCO3)2", k: 1, name: "жёсткая вода" }, { f: "Na2CO3", k: 1, name: "стиральная сода" }],
+      right: [{ f: "CaCO3", k: 1, name: "осадок" }, { f: "NaHCO3", k: 2, name: "сода" }]
+    },
+    effects: { precipitate: "белый осадок" },
+    observe: "Вода помутнела, выпал белый осадок: стиральная сода связала кальций. Вода стала мягкой."
   }
 ];

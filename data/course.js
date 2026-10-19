@@ -5,18 +5,22 @@ import * as m1 from "./lessons/m1.js";
 import * as m2 from "./lessons/m2.js";
 import * as m3 from "./lessons/m3.js";
 import * as m4 from "./lessons/m4.js";
+import * as m5 from "./lessons/m5.js";
+import * as m6 from "./lessons/m6.js";
+import * as m7 from "./lessons/m7.js";
+import * as m8 from "./lessons/m8.js";
 
-export const LESSON_PACKS = [m1, m2, m3, m4];
+export const LESSON_PACKS = [m1, m2, m3, m4, m5, m6, m7, m8];
 
 export const MODULES = [
   { n: 1, title: "Вещества и смеси", lessons: ["creek-water", "salt-sand", "fuel-water"], plan: [] },
   { n: 2, title: "Атомы и таблица Менделеева", lessons: ["battery-lithium", "fertilizer-npk"], plan: ["из чего сделана монета 🔨"] },
   { n: 3, title: "Связи и молекулы", lessons: ["water-oil", "kitchen-gases"], plan: ["почему клей клеит 🔨"] },
   { n: 4, title: "Реакции и уравнения", lessons: ["gas-stove", "rust-thermite"], plan: [] },
-  { n: 5, title: "Моль и масса", lessons: ["soda-vinegar"], plan: ["антацид от изжоги 💊", "лимонная кислота против накипи 🧽"] },
-  { n: 6, title: "Растворы и концентрации", plan: ["разбавить эссенцию 🍳", "физраствор 💊", "антифриз 🚗"] },
-  { n: 7, title: "Кислоты, основания, pH", plan: ["кислотность почвы 🌱", "pH шампуня 🧴", "капустный индикатор 🍳"] },
-  { n: 8, title: "Соли, осадки, жёсткость воды", plan: ["накипь 🧽", "мутная вода в аквариуме 🌍", "высолы на кирпиче 🔨"] },
+  { n: 5, title: "Моль и масса", lessons: ["soda-vinegar", "antacid"], plan: [] },
+  { n: 6, title: "Растворы и концентрации", lessons: ["vinegar-essence", "saline", "antifreeze"], plan: [] },
+  { n: 7, title: "Кислоты, основания, pH", lessons: ["cabbage-indicator", "soil-lime", "shampoo-ph"], plan: [] },
+  { n: 8, title: "Соли, осадки, жёсткость воды", lessons: ["limescale", "hard-water-soap"], plan: ["высолы на кирпиче 🔨"] },
   { n: 9, title: "Окисление и восстановление", plan: ["ржавчина на кузове 🚗", "отбеливатель 🧽", "батарейка из лимона 🔋"] },
   { n: 10, title: "Энергия и скорость реакций", plan: ["химическая грелка ⚠️", "застывание цемента 🔨", "порча еды 🍳"] },
   { n: 11, title: "Органика I", plan: ["топливо 🔋", "спирты и антисептики 💊", "запахи и эфиры 🧴"] },

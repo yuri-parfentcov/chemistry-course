@@ -59,6 +59,24 @@ for (const l of Object.values(LESSONS)) {
       (step.shelf || step.substances).forEach((id) => { if (!SUBSTANCES[id]) fail(`${l.id}: нет вещества ${id}`); });
     }
     if (step.type === "micro" && !REACTIONS.some((r) => r.id === step.reaction)) fail(`${l.id}: нет реакции ${step.reaction}`);
+    if (step.type === "lab") {
+      if (step.reaction && !REACTIONS.some((r) => r.id === step.reaction)) fail(`${l.id}: нет реакции ${step.reaction}`);
+      step.goals.filter((g) => g.reaction).forEach((g) => { if (!REACTIONS.some((r) => r.id === g.reaction)) fail(`${l.id}: цель ждёт несуществующую реакцию ${g.reaction}`); });
+    }
+    if (step.type === "mix") {
+      // перебираем все положения ползунков: каждая цель должна быть достижима
+      const { stock, water } = step.mixer;
+      const reached = new Set();
+      for (let a = 0; a <= stock.max + 1e-9; a += stock.step) {
+        for (let w = 0; w <= water.max + 1e-9; w += water.step) {
+          const sa = +a.toFixed(4), sw = +w.toFixed(4);
+          const total = sa + sw, solute = sa * stock.c / 100;
+          const st = { stock: sa, water: sw, total, solute, c: total ? solute / total * 100 : 0 };
+          step.goals.forEach((g) => { if (!reached.has(g.id) && g.test(st)) reached.add(g.id); });
+        }
+      }
+      step.goals.forEach((g) => { if (!reached.has(g.id)) fail(`${l.id}: цель смесителя «${g.id}» недостижима`); });
+    }
     if (step.type === "calc") {
       for (let k = 0; k < 30; k++) {
         const p = step.generate();

@@ -20,7 +20,7 @@ export function createBeaker(canvas) {
     pour: null,
     // смеси: муть, осадок, верхний слой (или эмульсия), кристаллы, микробы, пар, огонь
     turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null,
-    microbes: 0, steam: [], steaming: 0, flame: 0
+    microbes: 0, steam: [], steaming: 0, flame: 0, lather: 0
   };
   const BLOBS = Array.from({ length: 26 }, () => [Math.random(), Math.random(), 3 + Math.random() * 6]);
   const MICROBES = Array.from({ length: 7 }, () => [Math.random(), Math.random(), Math.random() * 6]);
@@ -78,7 +78,7 @@ export function createBeaker(canvas) {
     const sy = surfaceY();
     s.bubbles = s.bubbles.filter((b) => b.y > sy - 2);
     s.fizz *= Math.pow(0.55, dt); // затухает за несколько секунд
-    const foamTarget = Math.min(1, s.fizz * 1.1);
+    const foamTarget = Math.max(Math.min(1, s.fizz * 1.1), s.level > 0.02 ? s.lather : 0);
     s.foam += (foamTarget - s.foam) * Math.min(1, dt * (foamTarget > s.foam ? 4 : 0.6));
     s.gasAlpha += ((s.fizz > 0.15 ? 1 : 0) - s.gasAlpha) * Math.min(1, dt * 2);
     s.tempShown += (s.temp - s.tempShown) * Math.min(1, dt * 0.8);
@@ -349,7 +349,7 @@ export function createBeaker(canvas) {
     draw(time);
     const busy = s.grains.length || s.bubbles.length || s.fizz > 0.02 || s.foam > 0.02 || s.pour ||
       Math.abs(s.level - s.portions / CAPACITY) > 0.002 || Math.abs(s.temp - s.tempShown) > 0.05 ||
-      s.steam.length || s.steaming > 0 || s.flame > 0.02 || s.microbes > 0 || (s.layer && s.layer.emulsion) ||
+      s.steam.length || s.steaming > 0 || Math.abs(s.foam - (s.lather || 0)) > 0.02 || s.flame > 0.02 || s.microbes > 0 || (s.layer && s.layer.emulsion) ||
       Math.abs(s.turbid - s.turbidShown) > 0.005 || s.turbid > 0.01;
     if (busy) requestAnimationFrame(frame);
     else { running = false; last = 0; }
@@ -399,7 +399,7 @@ export function createBeaker(canvas) {
     },
     reset() {
       Object.assign(s, { portions: 0, level: 0, rgb: null, pile: 0, grains: [], bubbles: [], fizz: 0, foam: 0, temp: 22, gasLabel: null, gasAlpha: 0, pour: null,
-        turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null, microbes: 0, steam: [], steaming: 0 });
+        turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null, microbes: 0, steam: [], steaming: 0, lather: 0 });
       kick();
     },
     // Смеси: задать видимое состояние целиком (то, что не передано, не меняется).

@@ -1,10 +1,13 @@
-// Лаборатория: полка с реактивами + стакан + журнал наблюдений.
-// Реакции находятся по данным REACTIONS: когда в жидкости есть все реагенты — запускаем.
+// Лаборатория: полка с реактивами + стакан + инструменты + журнал наблюдений.
+// Реакции находятся по данным REACTIONS: когда в жидкости есть все реагенты
+// (и выполнено условие, например нагрев) — запускаем. pH считает модель из ph.js,
+// капустный индикатор окрашивает жидкость, осадки ложатся на дно, мыло пенится.
 import { SUBSTANCES } from "../../data/substances.js";
 import { REACTIONS } from "../../data/reactions.js";
 import { formulaHTML } from "./formula.js";
 import { createBeaker } from "./lab-macro.js";
-import { $, esc } from "../core/util.js";
+import { mixturePH, cabbageColor, stripColor, phWord } from "./ph.js";
+import { $, esc, fmt } from "../core/util.js";
 
 // Банка на полке (общая для лаборатории и разделения смесей)
 export function jarHTML(id) {
@@ -36,7 +39,14 @@ export function bindShelf(root, bench, add) {
   });
 }
 
-export function createLab(root, { substances, onEvent = () => {} }) {
+const TOOLS = {
+  ph: "🧾 Измерить pH",
+  heat: "🔥 Вскипятить"
+};
+
+// substances — что стоит на полке; tools — ["ph", "heat"];
+// onEvent(событие, состояние) — состояние: { units, ph }
+export function createLab(root, { substances, tools = [], onEvent = () => {} }) {
   root.innerHTML = `
     <div class="lab">
       <div class="shelf" role="group" aria-label="Полка с реактивами">
@@ -44,7 +54,10 @@ export function createLab(root, { substances, onEvent = () => {} }) {
       </div>
       <div class="bench">
         <canvas class="beaker" width="320" height="300" aria-label="Стакан"></canvas>
-        <button type="button" class="btn ghost small" data-act="empty">🧽 Вылить и помыть</button>
+        <div class="tools">
+          ${tools.map((t) => `<button type="button" class="btn small tool" data-tool="${t}">${TOOLS[t]}</button>`).join("")}
+          <button type="button" class="btn ghost small" data-act="empty">🧽 Вылить и помыть</button>
+        </div>
       </div>
       <ol class="lab-log" aria-live="polite"></ol>
     </div>`;
@@ -56,35 +69,59 @@ export function createLab(root, { substances, onEvent = () => {} }) {
   // units — сколько порций вещества ещё не прореагировало; added — что вообще клали
   let units = {};
   let added = {};
+  let busy = false;
 
-  function note(text, kind = "") {
+  const ph = () => mixturePH(Object.entries(units).map(([id, n]) => ({ sub: SUBSTANCES[id], units: n })));
+  const state = () => ({ units: { ...units }, ph: ph() });
+  const emit = (ev) => onEvent(ev, state());
+
+  function note(html, kind = "") {
     const li = document.createElement("li");
     li.className = kind;
-    li.textContent = text;
+    li.innerHTML = html;
     log.prepend(li);
     while (log.children.length > 6) log.lastChild.remove();
   }
 
-  function tryReactions(justAdded) {
+  // Внешний вид стакана, который зависит от состава: индикатор, осадок, пена
+  function refresh() {
+    const scene = {};
+    const p = ph();
+    if (units.cabbage > 0 && beaker.hasLiquid && p !== null) scene.rgb = cabbageColor(p);
+    let sed = 0, sedColor = null;
+    for (const [id, n] of Object.entries(units)) {
+      const s = SUBSTANCES[id];
+      if (n > 0 && (s.state === "precipitate" || (s.insoluble && beaker.hasLiquid))) { sed += n; sedColor = s.color; }
+    }
+    scene.sediment = sed ? { amt: Math.min(1, 0.35 * sed), rgb: sedColor } : null;
+    scene.turbid = units.scum > 0 ? 0.35 : 0;
+    const lather = Object.entries(units).some(([id, n]) => n > 0 && SUBSTANCES[id].lather) && !(units.hardwater > 0);
+    scene.lather = lather && beaker.hasLiquid ? 0.45 : 0;
+    beaker.setScene(scene);
+  }
+
+  function tryReactions(justAdded, heating = false) {
     if (!beaker.hasLiquid) return false;
     let reacted = false;
     for (const r of REACTIONS) {
-      if (!r.reactants.length || !r.reactants.every((id) => units[id] > 0)) continue;
+      if (!r.reactants.length || (r.condition === "heat" && !heating)) continue;
+      if (!r.reactants.every((id) => units[id] > 0)) continue;
       const n = Math.min(...r.reactants.map((id) => units[id]));
       r.reactants.forEach((id) => { units[id] -= n; });
-      if (r.effects.gas) beaker.fizz(0.9 * n, r.effects.gas);
+      for (const [pid, k] of Object.entries(r.produces || {})) units[pid] = (units[pid] || 0) + k * n;
+      if (r.effects.gas) beaker.fizz((r.effects.gasPower || 0.9) * n, r.effects.gas);
       if (r.effects.heat) beaker.addHeat(r.effects.heat * n);
-      note(r.observe, "reaction");
-      onEvent({ type: "reaction", reaction: r });
+      note(esc(r.observe), "reaction");
+      emit({ type: "reaction", reaction: r });
       reacted = true;
     }
     if (!reacted && justAdded) {
       // реагент добавили, а партнёр уже израсходован
       for (const r of REACTIONS) {
-        if (!r.reactants.includes(justAdded)) continue;
+        if (!r.reactants.includes(justAdded) || r.reactants.length < 2 || r.condition || !r.effects.gas) continue;
         const partner = r.reactants.find((id) => id !== justAdded);
-        if (added[partner] && !units[partner]) {
-          note(`Шипения нет: партнёр для реакции («${SUBSTANCES[partner].name}») уже израсходован. Новая порция осталась в избытке.`, "hint");
+        if (added[partner] && !units[partner] && SUBSTANCES[partner].state !== "precipitate") {
+          note(`Шипения нет: партнёр («${esc(SUBSTANCES[partner].name)}») уже израсходован. Новая порция осталась в избытке.`, "hint");
           return true;
         }
       }
@@ -93,44 +130,72 @@ export function createLab(root, { substances, onEvent = () => {} }) {
   }
 
   function add(id) {
+    if (busy) return;
     const s = SUBSTANCES[id];
     if (s.state === "liquid") {
       if (beaker.full) { note("Стакан полон. Вылейте его, чтобы начать заново.", "hint"); return; }
       const hadPile = Object.keys(units).some((k) => SUBSTANCES[k].state === "solid" && units[k] > 0) && !beaker.hasLiquid;
       beaker.pour(s.color);
-      note(s.pour);
+      note(esc(s.pour || `Налили: ${s.name.toLowerCase()}.`));
       units[id] = (units[id] || 0) + 1;
       added[id] = true;
-      onEvent({ type: "add", id });
-      if (!tryReactions(id) && hadPile) {
+      emit({ type: "add", id });
+      const reacted = tryReactions(id);
+      if (s.lather && units[id] > 0 && !(units.hardwater > 0)) note("Взбили: получилась пышная пена.");
+      if (!reacted && hadPile) {
         note("Порошок со дна растворился. Пузырей нет.");
-        Object.keys(units).filter((k) => SUBSTANCES[k].state === "solid").forEach((k) => onEvent({ type: "dissolve", id: k }));
+        Object.keys(units).filter((k) => SUBSTANCES[k].state === "solid").forEach((k) => emit({ type: "dissolve", id: k }));
       }
     } else {
       units[id] = (units[id] || 0) + 1;
       added[id] = true;
-      onEvent({ type: "add", id });
+      emit({ type: "add", id });
       if (!beaker.hasLiquid) {
         beaker.sprinkle(s.color, false);
-        note(`${s.name} лежит на дне сухого стакана. Ничего не происходит: веществам нужна жидкость, чтобы встретиться.`);
+        note(`${esc(s.name)} лежит на дне сухого стакана. Ничего не происходит: веществам нужна жидкость, чтобы встретиться.`);
+        refresh();
         return;
       }
       beaker.sprinkle(s.color, true);
       if (!tryReactions(id)) {
-        note(s.inWater);
-        onEvent({ type: "dissolve", id });
+        note(esc(s.inWater || `Добавили: ${s.name.toLowerCase()}.`));
+        emit({ type: "dissolve", id });
       }
     }
+    refresh();
   }
+
+  const ACTIONS = {
+    ph() {
+      const p = ph();
+      if (p === null) { note("Мерить нечего: в стакане нет жидкости.", "hint"); return; }
+      note(`<span class="strip" style="background:${stripColor(p)}"></span> Индикаторная полоска: <b>pH ≈ ${fmt(p, 1)}</b>, среда ${phWord(p)}.`);
+      emit({ type: "ph", value: p });
+    },
+    heat() {
+      if (!beaker.hasLiquid) { note("Нагревать пустой стакан незачем.", "hint"); return; }
+      busy = true;
+      beaker.heat(2.6);
+      note("Нагреваем до кипения…");
+      setTimeout(() => {
+        busy = false;
+        if (!tryReactions(null, true)) note("Вода покипела и остыла. Больше ничего не изменилось.");
+        emit({ type: "heat" });
+        refresh();
+      }, 2600);
+    }
+  };
 
   bindShelf(root, $(".bench", root), add);
   root.addEventListener("click", (e) => {
-    if (e.target.closest('[data-act="empty"]')) {
+    const t = e.target.closest("[data-tool]");
+    if (t && !busy) ACTIONS[t.dataset.tool]();
+    if (e.target.closest('[data-act="empty"]') && !busy) {
       beaker.reset();
       units = {};
       added = {};
       note("Стакан чистый.");
-      onEvent({ type: "empty" });
+      emit({ type: "empty" });
     }
   });
   note("Стакан чистый. Добавьте что-нибудь с полки.");
