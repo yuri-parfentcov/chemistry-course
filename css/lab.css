@@ -24,7 +24,9 @@
   .stepper .now { flex: 3; }
 }
 
-.lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin: 20px 0 40px; }
+.lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin: 20px 0 6px; }
+.next-hint { text-align: right; color: var(--muted); font-size: .92rem; margin: 0 0 40px; min-height: 1.4em; }
+.opt-tag { font-size: .78rem; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 0 8px; margin-left: 6px; white-space: nowrap; }
 
 .story .lead { font-size: 1.15rem; }
 .story q { font-style: italic; }

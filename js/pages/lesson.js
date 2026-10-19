@@ -59,9 +59,18 @@ $("#stepper").addEventListener("click", (e) => {
   if (b && !b.disabled) go(Number(b.dataset.i));
 });
 
+// Подсказка под кнопкой «Дальше»: что осталось сделать на этом шаге
+const HINTS = {
+  hypothesis: "Чтобы идти дальше, выберите один из вариантов.",
+  calc: "Чтобы идти дальше, решите все шаги расчёта."
+};
+function hint(text) {
+  $("#nextHint").textContent = text || "";
+}
+
 function complete(i) {
   done.add(i);
-  if (i === current) nextBtn.disabled = false;
+  if (i === current) { nextBtn.disabled = false; hint(""); }
   renderStepper();
 }
 
@@ -72,6 +81,7 @@ function go(i) {
   nextBtn.disabled = !done.has(i);
   nextBtn.hidden = i === lesson.steps.length - 1;
   renderStepper();
+  hint(done.has(i) ? "" : HINTS[step.type]);
   stage.innerHTML = "";
   RENDER[step.type](step, i);
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -89,7 +99,7 @@ function trainer(step, i, { title = "", work = "" } = {}) {
       ${title ? `<h2>${title}</h2>` : ""}
       ${step.intro ? `<p>${step.intro}</p>` : ""}
       <ul class="checklist">${step.goals.map((g) =>
-        `<li data-goal="${g.id}" class="${reached.has(g.id) ? "ok" : ""}"><span class="box"></span>${esc(g.text)}</li>`).join("")}</ul>
+        `<li data-goal="${g.id}" class="${reached.has(g.id) ? "ok" : ""}"><span class="box"></span>${esc(g.text)}${g.optional ? ' <span class="opt-tag">по желанию</span>' : ""}</li>`).join("")}</ul>
     </section>
     <section class="card work-card">${work}</section>
     <section class="card explain" id="explain" hidden>
@@ -104,20 +114,26 @@ function trainer(step, i, { title = "", work = "" } = {}) {
     box.hidden = false;
     $("#verdict", stage).innerHTML = verdictHTML(step);
   };
+  const required = step.goals.filter((g) => !g.optional);
+  const left = () => required.filter((g) => !reached.has(g.id));
+  const showLeft = () => {
+    if (done.has(i)) return;
+    hint(`Чтобы идти дальше, осталось: ${left().map((g) => `«${g.text}»`).join(", ")}.`);
+  };
   const goal = (gid) => {
     if (!reached.has(gid)) {
       reached.add(gid);
       const li = stage.querySelector(`[data-goal="${gid}"]`);
       if (li) li.classList.add("ok");
     }
-    if (step.goals.every((g) => reached.has(g.id))) {
+    if (!left().length) {
       const first = !done.has(i);
       complete(i);
       reveal();
       if (first) setTimeout(() => $("#explain", stage)?.scrollIntoView({ behavior: "smooth", block: "start" }), 600);
-    }
+    } else showLeft();
   };
-  if (step.goals.every((g) => reached.has(g.id))) { complete(i); reveal(); }
+  if (!left().length) { complete(i); reveal(); } else showLeft();
   return { goal, reached, reveal };
 }
 
