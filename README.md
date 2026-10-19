@@ -82,3 +82,24 @@ node tools/check.mjs
 - `js/pages/` — страницы: карта курса, плеер урока, коллекция.
 
 Новый опыт — это новая запись в `data/reactions.js`, а не новый код.
+
+## Источники чисел
+
+Ключевые числа курса сверены с источниками (октябрь 2026):
+
+- Температуры замерзания этиленгликоля (по объёму): [Engineering Toolbox](https://www.engineeringtoolbox.com/ethylene-glycol-d_146.html), [таблица GlycoChill](https://corecheminc.com/wp-content/uploads/2020/06/Freeze-Point-Chart-GlycoChill-Ethylene-Glycol-Heat-Transfer-Fluid.pdf).
+- Лимонная батарейка (Zn/Cu ≈ 0,9 В, Mg/Cu ≈ 1,5–1,9 В): [Wikipedia: Lemon battery](https://en.wikipedia.org/wiki/Lemon_battery).
+- Теплота сгорания метана (низшая ≈ 50 МДж/кг): [Cantera](https://cantera.org/3.2/userguide/heating-value.html). КПД газовой готовки ≈ 30–40 %: [ENERGY STAR](https://www.energystar.gov/partner_resources/products_partner_resources/brand-owner/eta-consumers/res-induction-cooking-tops).
+- Нормативы газа на готовку — на человека в месяц, по регионам: [пример норм](https://www.garant.ru/hotlaw/adygeia/422274/).
+- Число омыления оливкового масла ≈ 0,134–0,135 г NaOH/г, пережир 5 %: [Bramble Berry](https://brambleberry.com/how-to/soap/art0030-superfatting-soap-an-explanation.html).
+- Антисептики: [CDC (60–95 %)](https://www.cdc.gov/handwashing/show-me-the-science-hand-sanitizer.html), [рецепт ВОЗ (80 % этанола)](https://www.ncbi.nlm.nih.gov/books/NBK144054/).
+- Токсичность метанола: [Interna Szczeklika / McMaster textbook](https://empendium.com/mcmtextbook/chapter/B31.II.20.2.2.).
+- Сродство CO к гемоглобину (≈ 200–250 раз): [National Academies](https://nap.nationalacademies.org/read/10242/chapter/5).
+- Желудочный сок (HCl ≈ 0,1–0,16 моль/л, ≈ 2 л в сутки): [Википедия: Желудочный сок](https://ru.wikipedia.org/wiki/Желудочный_сок). Состав «Ренни»: [SmPC](https://rwandafda.gov.rw/wp-content/uploads/2025/06//RENNIEPEPPERMINT-Calciumcarbonate680mgandmagnesiumcarbonate80mgtablets-SmPC.pdf).
+- Кипячение воды (1 мин, выше ~2000 м — 3 мин): [CDC](https://www.cdc.gov/disasters/psa/boil-water-advisory.html).
+- pH кожи (в среднем < 5): [Lambers et al., 2006](https://pubmed.ncbi.nlm.nih.gov/18489300/); pH мыла 9–10: [PMC4171909](https://pmc.ncbi.nlm.nih.gov/articles/PMC4171909).
+- Солевая грелка ≈ 54 °C: [BBC Science Focus](https://www.sciencefocus.com/science/how-do-re-usable-hand-warmers-work/).
+- Запахи сложных эфиров: [Wikipedia: Ester](https://en.wikipedia.org/wiki/Ester).
+- Нормы извести и азота — популярные садоводческие рекомендации, ориентировочные: [пример](https://www.osnmedia.ru/instrukcii/instruktsiya-kak-raskislit-pochvu-na-ogorode/), [расширение CSU по азоту](https://extension.colostate.edu/resource/vegetable-gardening-nitrogen-recommendations).
+
+Модель pH, «практические» потенциалы металлов и симулятор скорости реакций — учебные упрощения: порядок величин и направление эффектов верные, точные значения для реальных смесей они не дают.

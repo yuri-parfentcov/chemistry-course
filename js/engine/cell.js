@@ -100,7 +100,7 @@ export function createCell(root, { mode = "battery", metals = Object.keys(METALS
     else if (ELECTROLYTES[s.el].k < 0.1) status.textContent = `${ELECTROLYTES[s.el].name}: ${ELECTROLYTES[s.el].note}, ток почти не идёт.`;
     else if (mode === "battery") {
       status.textContent = `${fmt(s.voltage, 2)} В. ${METALS[s.anode].name} отдаёт электроны и понемногу растворяется. ` +
-        (s.led ? "Светодиод горит!" : `Светодиоду нужно около ${fmt(LED_V, 1)} В.`);
+        (s.led ? "Светодиод горит!" : "Красному светодиоду нужно около 1,8–2 В.");
     } else {
       status.textContent = `Разрушается ${METALS[s.anode].name.toLowerCase()}: он активнее и отдаёт электроны. ${METALS[s.anode === s.a ? s.b : s.a].name} при этом защищён.`;
     }
