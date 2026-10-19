@@ -3,10 +3,10 @@
 // Связанная молекула ездит целиком и толкает другие атомы. Уровень пройден, когда у вашей
 // молекулы заняты все руки и это нужное вещество.
 // Логика и решатель (поиск в ширину) чистые — их же использует tools/check.mjs.
-import { ELEMENTS } from "../../data/elements.js?v=26";
-import { MOLECULE_BY_KEY, compositionKey } from "../../data/molecules.js?v=26";
-import { countAtoms } from "../engine/formula.js?v=26";
-import { $, esc } from "../core/util.js?v=26";
+import { ELEMENTS } from "../../data/elements.js?v=28";
+import { MOLECULE_BY_KEY, compositionKey } from "../../data/molecules.js?v=28";
+import { countAtoms } from "../engine/formula.js?v=28";
+import { $, esc } from "../core/util.js?v=28";
 
 const LETTER = { h: "H", o: "O", n: "N", c: "C", l: "Cl" };
 const DIRS = { up: [0, -1], right: [1, 0], down: [0, 1], left: [-1, 0] };

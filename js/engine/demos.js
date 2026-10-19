@@ -1,7 +1,7 @@
 // Интерактивные демонстрации к теории: масштаб, ионы, взаимодействие атомов, опыт Резерфорда.
 // createDemo(root, kind, { onEvent }) — onEvent(строка) сообщает уроку, что ученик что-то увидел.
-import { $, $$, esc, ease, lerp, reducedMotion, animate } from "../core/util.js?v=26";
-import { shellsOf } from "./atom.js?v=26";
+import { $, $$, esc, ease, lerp, reducedMotion, animate } from "../core/util.js?v=28";
+import { shellsOf } from "./atom.js?v=28";
 
 const NS = "http://www.w3.org/2000/svg";
 

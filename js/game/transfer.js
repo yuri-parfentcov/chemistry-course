@@ -1,9 +1,9 @@
 // Глава 2 «Обмен электронами»: металлы отдают внешние электроны неметаллам, пока у всех
 // не заполнится внешний слой. Ход — передача одного электрона или атом со склада/на склад.
 // Логика (par, правила) чистая — её же использует tools/check.mjs.
-import { PERIODIC } from "../../data/periodic.js?v=26";
-import { shellsOf } from "../engine/atom.js?v=26";
-import { $, esc, lerp, animate } from "../core/util.js?v=26";
+import { PERIODIC } from "../../data/periodic.js?v=28";
+import { shellsOf } from "../engine/atom.js?v=28";
+import { $, esc, lerp, animate } from "../core/util.js?v=28";
 
 const Z = Object.fromEntries(PERIODIC.map((e) => [e.s, e.z]));
 const NAME = Object.fromEntries(PERIODIC.map((e) => [e.s, e.name]));

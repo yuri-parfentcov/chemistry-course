@@ -1,10 +1,10 @@
 // Карта курса: модули по порядку, миссии, открытые сферы и статистика
-import { MODULES, LESSONS } from "../../data/course.js?v=26";
-import { SPHERES } from "../../data/spheres.js?v=26";
-import { $, esc } from "../core/util.js?v=26";
-import { srs, lessonStatus, openedSpheres, doneCount, ORDER, isDone } from "../core/progress.js?v=26";
-import { CHAPTERS } from "../../data/game-levels.js?v=26";
-import { stars } from "../game/store.js?v=26";
+import { MODULES, LESSONS } from "../../data/course.js?v=28";
+import { SPHERES } from "../../data/spheres.js?v=28";
+import { $, esc } from "../core/util.js?v=28";
+import { srs, lessonStatus, openedSpheres, doneCount, ORDER, isDone } from "../core/progress.js?v=28";
+import { CHAPTERS } from "../../data/game-levels.js?v=28";
+import { stars } from "../game/store.js?v=28";
 
 const STATUS = {
   available: { icon: "▶", text: "Начать" },

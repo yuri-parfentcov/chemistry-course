@@ -1,9 +1,9 @@
 // Глава 1 «Сборка на заказ»: из лотка частиц собрать атомы и ионы по заказу.
 // Ход — одна частица, перенесённая из лотка в атом или обратно.
 // Логика (par, status) чистая — её же использует tools/check.mjs.
-import { BY_Z } from "../../data/periodic.js?v=26";
-import { atomMarkup, shellsOf } from "../engine/atom.js?v=26";
-import { $, $$, esc } from "../core/util.js?v=26";
+import { BY_Z } from "../../data/periodic.js?v=28";
+import { atomMarkup, shellsOf } from "../engine/atom.js?v=28";
+import { $, $$, esc } from "../core/util.js?v=28";
 
 const KINDS = ["p", "n", "e"];
 const NAMES = { p: ["протон", "протона", "протонов"], n: ["нейтрон", "нейтрона", "нейтронов"], e: ["электрон", "электрона", "электронов"] };
@@ -61,6 +61,49 @@ const targetName = (t) => {
   return `${t.q ? "ион" : "атом"} ${gen(el.name)}`;
 };
 
+// ───── Карта ядер: по горизонтали нейтроны, по вертикали протоны ─────
+// Закрашены стабильные ядра (для первых 20 элементов), пунктир — «нейтронов столько же, сколько протонов».
+const MAXZ = 20, MAXN = 28, CS = 14, PAD = 26;
+const stableOf = (z) => (BY_Z[z] && BY_Z[z].stable) || [];
+
+export function stability(p, n) {
+  if (!p) return { kind: "empty" };
+  if (p > MAXZ) return { kind: "far" };
+  const st = stableOf(p);
+  if (st.includes(n)) return { kind: "stable" };
+  if (p === 4 && n === 4) return { kind: "be8" };
+  return { kind: n < Math.min(...st) ? "few" : "many", need: st };
+}
+
+function nuclideChart(p, n, targetZ) {
+  const X = (nn) => PAD + nn * CS, Y = (z) => PAD / 2 + (MAXZ - z) * CS;
+  let html = "";
+  // строка нужного элемента
+  if (targetZ <= MAXZ) html += `<rect x="${X(0)}" y="${Y(targetZ)}" width="${(MAXN + 1) * CS}" height="${CS}" class="nuc-row"/>`;
+  for (let z = 1; z <= MAXZ; z++) {
+    for (const nn of stableOf(z)) html += `<rect x="${X(nn) + 1}" y="${Y(z) + 1}" width="${CS - 2}" height="${CS - 2}" rx="2" class="nuc-stable"/>`;
+    if (z % 2 === 1 || z === targetZ) html += `<text x="${PAD - 4}" y="${Y(z) + CS / 2}" dy="0.35em" text-anchor="end" class="nuc-axis">${BY_Z[z].s}</text>`;
+  }
+  for (let nn = 0; nn <= MAXN; nn += 4) html += `<text x="${X(nn) + CS / 2}" y="${Y(0) + 6}" text-anchor="middle" class="nuc-axis">${nn}</text>`;
+  html += `<line x1="${X(1)}" y1="${Y(1)}" x2="${X(MAXZ + 1)}" y2="${Y(MAXZ + 1)}" class="nuc-diag"/>`;
+  html += `<text x="${X(MAXN + 1)}" y="${Y(0) + 18}" text-anchor="end" class="nuc-axis">нейтроны →</text>`;
+  html += `<text x="${X(0)}" y="${PAD / 2 - 3}" class="nuc-axis">↑ протоны</text>`;
+  html += `<text x="${X(2)}" y="${Y(16)}" class="nuc-zone">мало нейтронов:</text><text x="${X(2)}" y="${Y(15)}" class="nuc-zone">протоны расталкивают</text>`;
+  html += `<text x="${X(MAXN)}" y="${Y(2)}" text-anchor="end" class="nuc-zone">много нейтронов:</text><text x="${X(MAXN)}" y="${Y(1)}" text-anchor="end" class="nuc-zone">нейтрон станет протоном</text>`;
+  const s = stability(p, n);
+  if (p >= 1 && p <= MAXZ && n <= MAXN) html += `<circle cx="${X(n) + CS / 2}" cy="${Y(p) + CS / 2}" r="${CS * 0.62}" class="nuc-dot ${s.kind}"/>`;
+  const el = BY_Z[p];
+  const NOTES = {
+    empty: "Добавьте протон — на карте появится точка вашего ядра.",
+    far: "Ядро вышло за пределы карты (на ней первые 20 элементов).",
+    stable: `✓ Точка в закрашенной полосе: ядро ${el ? el.s : ""}-${p + n} стабильно.`,
+    be8: "Бериллий-8 — особый случай: нейтронов поровну с протонами, но ядру выгоднее развалиться на два очень прочных ядра гелия-4. Стабилен только бериллий-9.",
+    few: `Нейтронов мало: протоны расталкивают ядро. Такое ядро избавится от лишнего плюса — один протон превратится в нейтрон. Стабильно при ${s.need ? s.need.join(" или ") : ""} нейтр.`,
+    many: `Нейтронов слишком много: лишнему нейтрону выгоднее превратиться в протон (так распадается, например, углерод-14). Стабильно при ${s.need ? s.need.join(" или ") : ""} нейтр.`
+  };
+  return { html, viewBox: `0 0 ${X(MAXN + 1) + 4} ${Y(0) + 24}`, note: NOTES[s.kind] };
+}
+
 export function mount(root, level, api) {
   let atoms, tray, moves, history;
   const reset = () => {
@@ -79,6 +122,11 @@ export function mount(root, level, api) {
           <p class="order">Заказ${level.atoms.length > 1 ? ` ${i + 1}` : ""}: <b class="order-sym">${symbol(a.target.z, a.target.q, a.target.A)}</b> <span class="muted">— ${targetName(a.target)}</span></p>
           <svg class="atom-svg forge-svg" role="img" aria-label="Атом"></svg>
           <p class="forge-status"></p>
+          <details class="nuc-map" open>
+            <summary>Карта ядер: где ваше ядро</summary>
+            <svg class="nuc-svg" role="img" aria-label="Карта ядер: протоны и нейтроны"></svg>
+            <p class="nuc-note"></p>
+          </details>
           <div class="atom-controls">${KINDS.map((k) => `
             <div class="atom-row" data-k="${k}">
               <span class="atom-part ${k}"></span>
@@ -108,6 +156,11 @@ export function mount(root, level, api) {
         row.querySelector('[data-d="1"]').disabled = tray[k] <= 0 || a[k] >= LIMIT[k];
         row.querySelector('[data-d="-1"]').disabled = a[k] <= 0;
       });
+      const chart = nuclideChart(a.p, a.n, t.z);
+      const nsvg = $(".nuc-svg", card);
+      nsvg.innerHTML = chart.html;
+      nsvg.setAttribute("viewBox", chart.viewBox);
+      $(".nuc-note", card).innerHTML = chart.note;
       const st = status(a, t);
       if (!st.done) allDone = false;
       const el = BY_Z[a.p];
