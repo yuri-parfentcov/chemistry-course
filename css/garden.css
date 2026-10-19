@@ -1,0 +1,25 @@
+/* Коллекция кристаллов (по мотивам learn.css из pharao) */
+.stats.small b { font-size: 1.3rem; }
+.today { text-align: center; }
+.today .btn { margin: 4px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .88rem; color: var(--muted); margin: 18px 0 10px; }
+.collection { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.plot {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 6px;
+  text-decoration: none; color: inherit; font-size: .85rem;
+}
+a.plot:hover { border-color: var(--accent); }
+.plot .plant { font-size: 1.8rem; line-height: 1; }
+.plot.stage-5 { border-color: var(--amber); background: linear-gradient(to bottom, var(--card), var(--accent-soft)); }
+.plot.closed { opacity: .5; }
+
+.progress { height: 8px; background: var(--bg-2); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+.progress-bar { height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+.q-type { margin: 0; color: var(--muted); font-weight: 600; }
+#qText { margin: 6px 0 8px; }
+.clue { margin: 4px 0; padding: 6px 12px; background: var(--accent-soft); border-radius: 8px; }
+.feedback { border-radius: 12px; padding: 4px 16px; margin: 0 0 14px; }
+.feedback.ok { background: var(--ok-soft); }
+.feedback.bad { background: var(--bad-soft); }
+.fb-line { font-weight: 700; }

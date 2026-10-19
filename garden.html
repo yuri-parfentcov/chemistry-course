@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Коллекция кристаллов — Химия руками</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+  <link rel="stylesheet" href="css/theme.css?v=1">
+  <link rel="stylesheet" href="css/garden.css?v=1">
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="back">← Карта курса</a>
+  </header>
+  <main class="wrap narrow">
+    <section id="home">
+      <h1>💎 Коллекция кристаллов</h1>
+      <p class="muted">Каждый вопрос — кристалл. Верный ответ растит его на ступень, и он возвращается всё реже: через 1, 2, 3, 5 и 10 дней. Ошибка возвращает кристалл к капле, но это нормально: так и запоминают.</p>
+      <div class="stats small">
+        <div><b id="statStreak">0</b><span>дней подряд</span></div>
+        <div><b id="statGold">0</b><span>золота</span></div>
+        <div><b id="statLearned">0</b><span>выучено</span></div>
+        <div><b id="statCrystals">0</b><span>кристаллов</span></div>
+      </div>
+      <div class="card today">
+        <p id="todayText"></p>
+        <button type="button" class="btn big" id="startBtn">Начать тренировку</button>
+        <button type="button" class="btn ghost" id="extraBtn" hidden>Ещё 5 новых вопросов</button>
+      </div>
+      <div class="legend" id="stageLegend"></div>
+      <div class="collection" id="collection"></div>
+    </section>
+
+    <section id="quiz" hidden>
+      <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+      <p class="muted" id="progressText"></p>
+      <div class="card">
+        <p class="q-type" id="qType"></p>
+        <h2 id="qText"></h2>
+        <div id="qClues"></div>
+        <button type="button" class="btn ghost small" id="clueBtn" hidden>Ещё подсказка</button>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback" hidden></div>
+        <button type="button" class="btn" id="nextBtn" hidden>Дальше →</button>
+      </div>
+    </section>
+
+    <section id="done" hidden>
+      <div class="card">
+        <h2>🎉 Тренировка окончена</h2>
+        <p id="doneText"></p>
+        <button type="button" class="btn" id="homeBtn">К коллекции</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="js/pages/garden.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+/* Урок: шаги, лаборатория, лупа, уравнение, расчёт */
+.lesson-head h1 { margin: 8px 0 2px; font-size: clamp(1.6rem, 5vw, 2.2rem); }
+.lesson-head p { margin: 0; }
+
+.stepper { list-style: none; display: flex; gap: 6px; padding: 0; margin: 20px 0 8px; overflow-x: auto; }
+.stepper li { flex: 1; min-width: 0; }
+.stepper button {
+  width: 100%; font: inherit; cursor: pointer; display: flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 8px 10px; color: var(--muted);
+}
+.stepper button:disabled { cursor: not-allowed; opacity: .55; }
+.stepper .num {
+  flex: 0 0 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--bg-2); font-weight: 700; font-size: .85rem;
+}
+.stepper .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: .92rem; }
+.stepper .now button { border-color: var(--accent); color: var(--ink); }
+.stepper .now .num { background: var(--accent); color: var(--accent-ink); }
+.stepper .done .num { background: var(--ok); color: #fff; }
+@media (max-width: 600px) {
+  .stepper .lbl { display: none; }
+  .stepper .now .lbl { display: inline; }
+  .stepper .now { flex: 3; }
+}
+
+.lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin: 20px 0 40px; }
+
+.story .lead { font-size: 1.15rem; }
+.story q { font-style: italic; }
+.goals { background: var(--accent-soft); border-radius: 12px; padding: 4px 16px; margin-top: 12px; }
+.goals ul { padding-left: 4px; list-style: none; }
+.hyp-msg { font-weight: 600; color: var(--accent); min-height: 1.6em; }
+
+.checklist { list-style: none; padding: 0; margin: 8px 0 0; }
+.checklist li { display: flex; gap: 10px; align-items: center; padding: 4px 0; }
+.checklist .box {
+  flex: 0 0 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border);
+  display: grid; place-items: center; font-size: .8rem;
+}
+.checklist li.ok { color: var(--muted); text-decoration: line-through; }
+.checklist li.ok .box { background: var(--ok); border-color: var(--ok); }
+.checklist li.ok .box::after { content: "✓"; color: #fff; font-weight: 700; }
+
+/* ───── Лаборатория ───── */
+.lab { display: grid; grid-template-columns: 200px 1fr; grid-template-areas: "shelf bench" "log log"; gap: 16px; }
+.shelf { grid-area: shelf; display: flex; flex-direction: column; gap: 8px; }
+.bench {
+  grid-area: bench; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  border: 2px dashed transparent; border-radius: var(--radius); padding: 4px;
+  background: radial-gradient(ellipse at 50% 95%, var(--bg-2), transparent 70%);
+}
+.bench.drop { border-color: var(--accent); }
+.beaker { width: 100%; max-width: 360px; height: auto; aspect-ratio: 320 / 300; }
+.jar {
+  display: grid; grid-template-columns: 30px 1fr; grid-template-rows: auto auto; column-gap: 10px;
+  align-items: center; text-align: left; font: inherit; cursor: grab;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--border); border-radius: 12px; padding: 8px 10px;
+}
+.jar:hover { border-color: var(--accent); }
+.jar:active { cursor: grabbing; transform: scale(.98); }
+.jar-glass {
+  grid-row: span 2; width: 30px; height: 36px; border: 2px solid var(--glass); border-radius: 4px 4px 8px 8px;
+  background: linear-gradient(to top, var(--fill) 70%, transparent 70%);
+}
+.jar-glass.solid { background: radial-gradient(circle at 30% 80%, var(--fill) 2px, transparent 3px) 0 0 / 7px 7px, linear-gradient(to top, var(--fill) 55%, transparent 55%); }
+.jar-name { font-weight: 600; font-size: .95rem; line-height: 1.2; }
+.jar-formula { font-size: .85rem; color: var(--muted); }
+.lab-log { grid-area: log; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.lab-log li { padding: 8px 12px; border-radius: 10px; background: var(--bg); border-left: 4px solid var(--border); font-size: .95rem; }
+.lab-log li:first-child { border-left-color: var(--accent); }
+.lab-log li.reaction { background: var(--ok-soft); border-left-color: var(--ok); font-weight: 600; }
+.lab-log li.hint { background: var(--bad-soft); border-left-color: var(--amber); }
+.lab-log li:not(:first-child) { opacity: .7; }
+@media (max-width: 640px) {
+  .lab { grid-template-columns: 1fr; grid-template-areas: "bench" "shelf" "log"; }
+  .shelf { display: grid; grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ───── Лупа ───── */
+.micro { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; background: var(--bg); }
+.micro-head { font-weight: 700; margin-bottom: 6px; }
+.micro canvas { width: 100%; height: auto; aspect-ratio: 640 / 330; display: block; }
+.micro-caption { min-height: 3.2em; margin: 6px 0; font-weight: 600; }
+.micro-controls { display: flex; gap: 12px; align-items: center; }
+.micro-controls input { flex: 1; accent-color: var(--accent); }
+.micro-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: .88rem; color: var(--muted); }
+.dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--atom-stroke); margin-right: 5px; vertical-align: -1px; }
+
+.verdict { padding: 10px 14px; border-radius: 10px; font-weight: 600; }
+.verdict.ok { background: var(--ok-soft); }
+.verdict.bad { background: var(--bad-soft); }
+
+/* ───── Уравнение ───── */
+.equation { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; overflow-x: auto; }
+.eq-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 10px; justify-content: center; }
+.eq-term { display: inline-flex; flex-direction: column; align-items: center; }
+.eq-f { font-size: 1.45rem; white-space: nowrap; }
+.eq-k { margin-right: 2px; color: var(--amber); }
+.eq-gas { color: var(--accent); margin-left: 2px; }
+.eq-name { font-size: .8rem; color: var(--muted); }
+.eq-op { font-size: 1.4rem; color: var(--muted); padding-top: 2px; }
+.eq-arrow { color: var(--accent); }
+.eq-check { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; margin-top: 10px; font-size: .88rem; color: var(--muted); }
+.eq-check strong { color: var(--ok); }
+.eq-check.bad strong { color: var(--bad); }
+.atom-count { margin-left: 8px; white-space: nowrap; }
+.theory { margin-top: 12px; }
+
+.mass-table { border-collapse: collapse; margin: 8px 0; }
+.mass-table th, .mass-table td { border: 1px solid var(--border); padding: 6px 12px; text-align: center; }
+.mass-table th { text-align: left; font-weight: 600; color: var(--muted); }
+
+/* ───── Расчёт ───── */
+.calc-intro { font-size: 1.05rem; }
+.calc-steps { padding-left: 22px; }
+.calc-step { margin: 14px 0; }
+.calc-step label { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.calc-q { flex: 1 1 260px; font-weight: 600; }
+.calc-input { display: inline-flex; align-items: center; gap: 6px; }
+.calc-input input {
+  width: 120px; font: inherit; padding: 8px 10px; border-radius: 10px;
+  border: 2px solid var(--border); background: var(--bg); color: var(--ink);
+}
+.calc-input input:focus { outline: none; border-color: var(--accent); }
+.calc-step.solved input { border-color: var(--ok); }
+.unit { color: var(--muted); }
+.calc-actions { display: flex; gap: 8px; margin-top: 8px; }
+.calc-msg { margin: 6px 0 0; min-height: 0; }
+.calc-msg.ok { color: var(--ok); font-weight: 600; }
+.calc-msg.bad { color: var(--bad); }
+.calc-msg.hint { color: var(--amber); }
+.calc-done { background: var(--ok-soft); border-radius: 12px; padding: 4px 16px; margin: 12px 0; }
+
+.card-list { padding-left: 20px; }
+.card-list li { margin: 4px 0; }
+.finish { border-color: var(--ok); }

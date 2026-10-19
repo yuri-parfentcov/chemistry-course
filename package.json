@@ -1,0 +1,10 @@
+{
+  "name": "chemistry-course",
+  "private": true,
+  "type": "module",
+  "description": "Химия руками — курс химии для взрослых. Статический сайт без сборки; package.json нужен только для проверки данных.",
+  "scripts": {
+    "check": "node tools/check.mjs",
+    "serve": "python -m http.server 8000"
+  }
+}
