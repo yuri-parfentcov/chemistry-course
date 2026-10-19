@@ -16,14 +16,15 @@ const TOOLS = {
   evaporate: { icon: "♨️", name: "Выпарить досуха" }
 };
 
-export function createSeparator(root, { shelf, tools, onChange = () => {} }) {
+// toolLabels — свои подписи инструментов для конкретного урока, например { filter: "…" }
+export function createSeparator(root, { shelf, tools, toolLabels = {}, onChange = () => {} }) {
   root.innerHTML = `
     <div class="lab sep">
       <div class="shelf" role="group" aria-label="Полка">${shelf.map(jarHTML).join("")}</div>
       <div class="bench">
         <canvas class="beaker" width="320" height="300" aria-label="Стакан"></canvas>
         <div class="tools" role="group" aria-label="Инструменты">
-          ${tools.map((t) => `<button type="button" class="btn small tool" data-tool="${t}">${TOOLS[t].icon} ${TOOLS[t].name}</button>`).join("")}
+          ${tools.map((t) => `<button type="button" class="btn small tool" data-tool="${t}">${TOOLS[t].icon} ${toolLabels[t] || TOOLS[t].name}</button>`).join("")}
           <button type="button" class="btn ghost small" data-act="empty">🧽 Вылить и помыть</button>
         </div>
       </div>

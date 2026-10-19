@@ -251,6 +251,7 @@ const RENDER = {
     createSeparator($("#sepRoot", stage), {
       shelf: step.shelf,
       tools: step.tools,
+      toolLabels: step.toolLabels,
       onChange(snap) {
         step.goals.forEach((g) => { if (g.test(snap)) t.goal(g.id); });
       }
