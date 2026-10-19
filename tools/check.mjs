@@ -12,6 +12,7 @@ import { BY_Z } from "../data/periodic.js";
 import * as forge from "../js/game/forge.js";
 import * as transfer from "../js/game/transfer.js";
 import * as grid from "../js/game/grid.js";
+import * as stellar from "../js/game/stellar.js";
 
 let errors = 0;
 const fail = (msg) => { errors++; console.error("✗ " + msg); };
@@ -116,7 +117,7 @@ for (const m of MOLECULES) {
 if (JSON.stringify(countAtoms("Ca(OH)2")) !== JSON.stringify({ Ca: 1, O: 2, H: 2 })) fail("countAtoms: скобки");
 
 // Игра: уровни решаемы, норма ходов считается
-const ENGINES = { forge, transfer, grid };
+const ENGINES = { forge, transfer, grid, stellar };
 let gameLevels = 0;
 const ids = new Set();
 for (const c of CHAPTERS) {

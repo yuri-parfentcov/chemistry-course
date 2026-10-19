@@ -1,7 +1,7 @@
 // Уравнение реакции: цветные формулы, названия под ними и проверка «атомов слева = справа»
-import { formulaHTML, sideAtoms } from "./formula.js?v=24";
-import { ELEMENTS } from "../../data/elements.js?v=24";
-import { esc } from "../core/util.js?v=24";
+import { formulaHTML, sideAtoms } from "./formula.js?v=26";
+import { ELEMENTS } from "../../data/elements.js?v=26";
+import { esc } from "../core/util.js?v=26";
 
 function termHTML({ f, k, name, gas }) {
   return `<span class="eq-term">

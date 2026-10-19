@@ -1,7 +1,7 @@
 // «Парфюмер»: выберите кислоту и спирт — получится сложный эфир со своим запахом.
 // Найденные запахи собираются в коллекцию.
-import { $, $$, esc } from "../core/util.js?v=24";
-import { formulaHTML } from "./formula.js?v=24";
+import { $, $$, esc } from "../core/util.js?v=26";
+import { formulaHTML } from "./formula.js?v=26";
 
 // cfg: { left: [{ id, name, formula }], right: [...], results: { "leftId+rightId": { name, formula, smell, icon, use } },
 //        fallback: (l, r) => ({ name, smell, ... }), action }

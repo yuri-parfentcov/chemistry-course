@@ -2,7 +2,7 @@
 // Ползунки меняют количества, стакан показывает объём и насыщенность цвета,
 // табло — массу вещества и концентрацию. extra(состояние) — дополнительная строка табло
 // (например, температура замерзания антифриза).
-import { $, esc, fmt, clamp } from "../core/util.js?v=24";
+import { $, esc, fmt, clamp } from "../core/util.js?v=26";
 
 // cfg: { stock: { name, c, color, max, step }, water: { name, max, step }, unit: "г" | "мл" | "л",
 //        extra?: (st) => html }

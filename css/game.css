@@ -76,3 +76,18 @@ a.level:hover { border-color: var(--accent); }
 .dpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-areas: ". up ." "left down right"; gap: 6px; justify-content: center; margin: 10px 0 0; }
 .dpad [data-dir="up"] { grid-area: up; } .dpad [data-dir="left"] { grid-area: left; } .dpad [data-dir="down"] { grid-area: down; } .dpad [data-dir="right"] { grid-area: right; }
 .dpad .btn { padding: 0; font-size: 1.3rem; }
+
+/* глава 4: звёздная кузница */
+.st-goal { font-size: 1.05rem; }
+.st-energy { display: flex; align-items: center; gap: 10px; margin: 6px 0 10px; }
+.st-bar { flex: 1; height: 12px; background: var(--bg-2); border-radius: 999px; overflow: hidden; }
+.st-bar div { height: 100%; width: 0; background: linear-gradient(90deg, #f0b429, #ff7a3d); transition: width .4s; }
+.st-core { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; min-height: 160px; padding: 18px; border-radius: 16px;
+  background: radial-gradient(circle at 50% 40%, #fff2c4, #ffb347 55%, #c2410c); }
+.st-chip { position: relative; border-radius: 50%; border: 3px solid rgba(0, 0, 0, .25); background: var(--c); color: #111; font: 800 15px system-ui, sans-serif; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, .25); }
+.st-chip sup { font-size: .65em; }
+.st-chip.sel { outline: 4px solid #fff; outline-offset: 2px; transform: scale(1.08); }
+.st-chip.unstable { animation: wobble .25s infinite alternate; }
+@keyframes wobble { to { transform: rotate(6deg) scale(1.04); } }
+.st-fuse { position: absolute; inset: -6px; border-radius: 50%; border: 3px solid #c2410c; border-right-color: transparent; animation: fuse 4s linear forwards; }
+@keyframes fuse { to { transform: rotate(360deg); opacity: .2; } }

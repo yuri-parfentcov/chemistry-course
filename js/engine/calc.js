@@ -1,6 +1,6 @@
 // Расчётный стол: пошаговая задача, каждый шаг открывается после верного ответа.
 // Числа генерируются заново (task.generate), проверка с допуском.
-import { $, esc, parseNum } from "../core/util.js?v=24";
+import { $, esc, parseNum } from "../core/util.js?v=26";
 
 export function createCalc(root, task, { onDone = () => {} } = {}) {
   let p, idx;
