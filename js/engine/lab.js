@@ -6,18 +6,41 @@ import { formulaHTML } from "./formula.js";
 import { createBeaker } from "./lab-macro.js";
 import { $, esc } from "../core/util.js";
 
+// Банка на полке (общая для лаборатории и разделения смесей)
+export function jarHTML(id) {
+  const s = SUBSTANCES[id];
+  return `<button type="button" class="jar" data-id="${id}" draggable="true" title="${esc(s.chem)}">
+    <span class="jar-glass ${s.state}" style="--fill:${s.color}"></span>
+    <span class="jar-name">${esc(s.name)}</span>
+    <span class="jar-formula">${s.formula ? formulaHTML(s.formula) : esc(s.chem)}</span>
+  </button>`;
+}
+
+// Банку можно нажать или перетащить на стол
+export function bindShelf(root, bench, add) {
+  root.addEventListener("click", (e) => {
+    const jar = e.target.closest(".jar");
+    if (jar) add(jar.dataset.id);
+  });
+  root.addEventListener("dragstart", (e) => {
+    const jar = e.target.closest(".jar");
+    if (jar) e.dataTransfer.setData("text/plain", jar.dataset.id);
+  });
+  bench.addEventListener("dragover", (e) => { e.preventDefault(); bench.classList.add("drop"); });
+  bench.addEventListener("dragleave", () => bench.classList.remove("drop"));
+  bench.addEventListener("drop", (e) => {
+    e.preventDefault();
+    bench.classList.remove("drop");
+    const id = e.dataTransfer.getData("text/plain");
+    if (SUBSTANCES[id]) add(id);
+  });
+}
+
 export function createLab(root, { substances, onEvent = () => {} }) {
   root.innerHTML = `
     <div class="lab">
       <div class="shelf" role="group" aria-label="Полка с реактивами">
-        ${substances.map((id) => {
-          const s = SUBSTANCES[id];
-          return `<button type="button" class="jar" data-id="${id}" draggable="true" title="${esc(s.chem)}">
-            <span class="jar-glass ${s.state}" style="--fill:${s.color}"></span>
-            <span class="jar-name">${esc(s.name)}</span>
-            <span class="jar-formula">${formulaHTML(s.formula)}</span>
-          </button>`;
-        }).join("")}
+        ${substances.map(jarHTML).join("")}
       </div>
       <div class="bench">
         <canvas class="beaker" width="320" height="300" aria-label="Стакан"></canvas>
@@ -46,7 +69,7 @@ export function createLab(root, { substances, onEvent = () => {} }) {
     if (!beaker.hasLiquid) return false;
     let reacted = false;
     for (const r of REACTIONS) {
-      if (!r.reactants.every((id) => units[id] > 0)) continue;
+      if (!r.reactants.length || !r.reactants.every((id) => units[id] > 0)) continue;
       const n = Math.min(...r.reactants.map((id) => units[id]));
       r.reactants.forEach((id) => { units[id] -= n; });
       if (r.effects.gas) beaker.fizz(0.9 * n, r.effects.gas);
@@ -100,9 +123,8 @@ export function createLab(root, { substances, onEvent = () => {} }) {
     }
   }
 
+  bindShelf(root, $(".bench", root), add);
   root.addEventListener("click", (e) => {
-    const jar = e.target.closest(".jar");
-    if (jar) add(jar.dataset.id);
     if (e.target.closest('[data-act="empty"]')) {
       beaker.reset();
       units = {};
@@ -111,20 +133,6 @@ export function createLab(root, { substances, onEvent = () => {} }) {
       onEvent({ type: "empty" });
     }
   });
-  root.addEventListener("dragstart", (e) => {
-    const jar = e.target.closest(".jar");
-    if (jar) e.dataTransfer.setData("text/plain", jar.dataset.id);
-  });
-  const bench = $(".bench", root);
-  bench.addEventListener("dragover", (e) => { e.preventDefault(); bench.classList.add("drop"); });
-  bench.addEventListener("dragleave", () => bench.classList.remove("drop"));
-  bench.addEventListener("drop", (e) => {
-    e.preventDefault();
-    bench.classList.remove("drop");
-    const id = e.dataTransfer.getData("text/plain");
-    if (SUBSTANCES[id]) add(id);
-  });
-
   note("Стакан чистый. Добавьте что-нибудь с полки.");
   return { add };
 }

@@ -1,13 +1,19 @@
 // Курс: модули → уроки-миссии → шаги.
 // Шаги: task (задача) → hypothesis (гипотеза) → lab (опыт) → calc (расчёт) → cards (закрепление)
 import { fmt, fixed, pick } from "../js/core/util.js";
+import * as m1 from "./lessons/m1.js";
+import * as m2 from "./lessons/m2.js";
+import * as m3 from "./lessons/m3.js";
+import * as m4 from "./lessons/m4.js";
+
+export const LESSON_PACKS = [m1, m2, m3, m4];
 
 export const MODULES = [
-  { n: 1, title: "Вещества и смеси", plan: ["очистить воду в походе 🌍", "разделить соль и песок 🍳", "бензин и вода 🚗"] },
-  { n: 2, title: "Атомы и таблица Менделеева", plan: ["из чего сделана батарейка 🔋", "что в удобрении 🌱", "из чего монета 🔨"] },
-  { n: 3, title: "Связи и молекулы", plan: ["почему масло не растворяется 🍳", "почему клей клеит 🔨", "как работает ПАВ 🧴"] },
-  { n: 4, title: "Реакции и уравнения", plan: ["газ на плите и угарный газ 🔋", "термит и сварка 🔨"] },
-  { n: 5, title: "Моль и масса", lessons: ["soda-vinegar"], plan: ["доза удобрения на грядку 🌱", "антацид от изжоги 💊"] },
+  { n: 1, title: "Вещества и смеси", lessons: ["creek-water", "salt-sand", "fuel-water"], plan: [] },
+  { n: 2, title: "Атомы и таблица Менделеева", lessons: ["battery-lithium", "fertilizer-npk"], plan: ["из чего сделана монета 🔨"] },
+  { n: 3, title: "Связи и молекулы", lessons: ["water-oil", "kitchen-gases"], plan: ["почему клей клеит 🔨"] },
+  { n: 4, title: "Реакции и уравнения", lessons: ["gas-stove", "rust-thermite"], plan: [] },
+  { n: 5, title: "Моль и масса", lessons: ["soda-vinegar"], plan: ["антацид от изжоги 💊", "лимонная кислота против накипи 🧽"] },
   { n: 6, title: "Растворы и концентрации", plan: ["разбавить эссенцию 🍳", "физраствор 💊", "антифриз 🚗"] },
   { n: 7, title: "Кислоты, основания, pH", plan: ["кислотность почвы 🌱", "pH шампуня 🧴", "капустный индикатор 🍳"] },
   { n: 8, title: "Соли, осадки, жёсткость воды", plan: ["накипь 🧽", "мутная вода в аквариуме 🌍", "высолы на кирпиче 🔨"] },
@@ -18,7 +24,7 @@ export const MODULES = [
   { n: 13, title: "Безопасность", plan: ["что нельзя смешивать ⚠️", "знаки опасности ⚠️", "огнетушители ⚠️"] }
 ];
 
-export const LESSONS = {
+const PILOT = {
   "soda-vinegar": {
     id: "soda-vinegar",
     module: 5,
@@ -60,8 +66,8 @@ export const LESSONS = {
         intro: "Перед вами стакан и полка с реактивами. Нажмите на банку (или перетащите её в стакан), чтобы добавить вещество.",
         substances: ["soda", "vinegar", "water", "salt", "sugar"],
         goals: [
-          { id: "soda-water", text: "Насыпьте соду в воду. Будут пузыри?" },
-          { id: "reaction", text: "Добавьте к соде уксус" },
+          { id: "soda-water", text: "Насыпьте соду в воду. Будут пузыри?", event: "dissolve", substance: "soda" },
+          { id: "reaction", text: "Добавьте к соде уксус", event: "reaction" },
           { id: "micro", text: "Посмотрите в «лупу», что делают атомы" }
         ],
         reaction: "soda-vinegar",
@@ -127,3 +133,9 @@ export const LESSONS = {
     ]
   }
 };
+
+// Все уроки по id; module — номер модуля, в котором урок стоит на карте
+export const LESSONS = Object.fromEntries(
+  [...LESSON_PACKS.flatMap((p) => p.LESSONS), ...Object.values(PILOT)].map((l) => [l.id, l])
+);
+for (const m of MODULES) for (const id of m.lessons || []) LESSONS[id].module = m.n;

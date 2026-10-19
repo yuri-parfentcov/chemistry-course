@@ -135,3 +135,112 @@
 .card-list { padding-left: 20px; }
 .card-list li { margin: 4px 0; }
 .finish { border-color: var(--ok); }
+
+/* ───── Общее для тренажёров ───── */
+.small { font-size: .88rem; }
+.formula { font-weight: 700; text-align: center; background: var(--bg); border-radius: 10px; padding: 8px; }
+.note { background: var(--bad-soft); border-left: 4px solid var(--amber); border-radius: 8px; padding: 8px 12px; }
+.pill { padding: 0 8px; border-radius: 999px; font-weight: 600; color: #fff; }
+.pill.p { background: #e0453a; }
+.pill.n { background: #7d898e; }
+.pill.e { background: #2f7de1; }
+.step-btn {
+  width: 36px; height: 36px; border-radius: 50%; font: inherit; font-weight: 700; font-size: 1.1rem;
+  border: 2px solid var(--accent); background: var(--card); color: var(--accent); cursor: pointer;
+}
+.step-btn:hover { background: var(--accent-soft); }
+.step-btn:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+
+/* ───── Разделение смесей ───── */
+.lab.sep { grid-template-areas: "shelf bench" "products products" "log log"; }
+.tools { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.products { grid-area: products; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.product { background: var(--ok-soft); border: 1px solid var(--ok); border-radius: 999px; padding: 2px 12px; font-size: .9rem; font-weight: 600; }
+.lab-log li.danger { background: var(--bad-soft); border-left-color: var(--bad); font-weight: 700; }
+@media (max-width: 640px) { .lab.sep { grid-template-areas: "bench" "shelf" "products" "log"; } }
+
+/* ───── Конструктор атома ───── */
+.atom-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.atom-svg { width: 100%; max-width: 360px; display: block; margin: 0 auto; }
+.atom-svg .shell { fill: none; stroke: var(--glass); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.atom-svg .nucleon.p { fill: #e0453a; stroke: rgba(0, 0, 0, .25); }
+.atom-svg .nucleon.n { fill: #8d999e; stroke: rgba(0, 0, 0, .25); }
+.atom-svg .electron { fill: #2f7de1; stroke: rgba(0, 0, 0, .25); }
+.atom-svg .electron.outer { fill: var(--amber); }
+.atom-row { display: grid; grid-template-columns: 16px 1fr 36px 36px 36px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.atom-part { width: 16px; height: 16px; border-radius: 50%; }
+.atom-part.p { background: #e0453a; }
+.atom-part.n { background: #8d999e; }
+.atom-part.e { background: #2f7de1; }
+.atom-label b, .atom-label small { display: block; line-height: 1.2; }
+.atom-label small { color: var(--muted); }
+.atom-count { text-align: center; font-weight: 700; font-size: 1.15rem; }
+.atom-info { margin-top: 12px; }
+.atom-name { display: flex; gap: 12px; align-items: center; }
+.big-symbol { font-size: 2.6rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.big-symbol sup { font-size: 1.1rem; }
+.atom-name b, .atom-name small { display: block; }
+.atom-info dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 10px 0; }
+.atom-info dt { color: var(--muted); }
+.atom-info dd { margin: 0; font-weight: 600; }
+.iso { background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; margin: 0; }
+.ptable-wrap { margin-top: 18px; overflow-x: auto; }
+.ptable { display: grid; grid-template-columns: repeat(18, minmax(28px, 1fr)); gap: 3px; min-width: 560px; }
+.pt-cell {
+  font: inherit; font-weight: 700; font-size: .85rem; padding: 2px 0 4px; cursor: pointer;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--border); border-radius: 5px; line-height: 1.1;
+}
+.pt-cell small { display: block; font-size: .6rem; color: var(--muted); font-weight: 400; }
+.pt-cell:hover { border-color: var(--accent); }
+.pt-cell.now { background: var(--accent); color: var(--accent-ink); }
+.pt-cell.now small { color: var(--accent-ink); }
+.pt-cell.picked { outline: 3px solid var(--amber); }
+.ptable-info { min-height: 3em; margin-top: 8px; }
+@media (max-width: 640px) { .atom-lab { grid-template-columns: 1fr; } }
+
+/* ───── Конструктор молекул ───── */
+.palette { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+.pal-atom { display: flex; flex-direction: column; align-items: center; gap: 2px; font: inherit; background: none; border: none; cursor: pointer; color: var(--muted); padding: 2px 4px; }
+.pal-atom .ball {
+  width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 1.1rem;
+  background: radial-gradient(circle at 24% 22%, rgba(255, 255, 255, .55), var(--c) 22%); color: var(--ink);
+  border: 1.5px solid var(--atom-stroke);
+}
+.pal-atom:hover .ball { transform: scale(1.08); }
+.pal-atom small { font-size: .78rem; }
+.pal-sep { flex: 1; }
+.build-area { width: 100%; height: auto; aspect-ratio: 600 / 340; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); touch-action: none; user-select: none; }
+.build-area .atom { cursor: grab; }
+.build-area .ball { stroke: var(--atom-stroke); stroke-width: 1.5; }
+.build-area .shine { fill: rgba(255, 255, 255, .55); pointer-events: none; }
+.build-area text { text-anchor: middle; font-weight: 800; pointer-events: none; font-family: system-ui, sans-serif; }
+.build-area .atom.sel .ball { stroke: var(--amber); stroke-width: 4; }
+.build-area .stub { stroke: var(--amber); stroke-width: 3; stroke-linecap: round; }
+.build-area .stub-end { fill: var(--amber); }
+.build-area .bond-line { stroke: var(--bond); stroke-width: 5; stroke-linecap: round; }
+.build-area .bond-hit { stroke: transparent; stroke-width: 22; cursor: pointer; }
+.build-area .bond:hover .bond-line { stroke: var(--bad); }
+.build-status { font-weight: 600; min-height: 1.6em; }
+.found-mol { display: flex; gap: 12px; align-items: center; background: var(--ok-soft); border-radius: 10px; padding: 8px 12px; margin: 6px 0; }
+.found-f { font-size: 1.3rem; white-space: nowrap; }
+
+/* ───── Балансировщик ───── */
+.bal-block { margin-bottom: 18px; }
+.bal-block h3 { margin: 0 0 8px; }
+.bal-row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-start; justify-content: center; }
+.bal-term { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 70px; }
+.bal-k { display: flex; align-items: center; gap: 6px; }
+.bal-k output { font-weight: 800; font-size: 1.2rem; min-width: 1ch; text-align: center; color: var(--amber); }
+.bal-f { font-size: 1.35rem; white-space: nowrap; }
+.copies { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; max-width: 150px; }
+.mol-copy { display: inline-flex; flex-wrap: wrap; gap: 1px; max-width: 34px; padding: 2px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
+.mol-copy i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--atom-stroke); }
+.scales { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 14px; }
+.scale { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; }
+.scale.even { border-color: var(--ok); background: var(--ok-soft); }
+.sc-n { font-weight: 800; min-width: 1.5ch; text-align: center; }
+.beam { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; border-bottom: 3px solid var(--muted); transition: transform .3s; font-weight: 700; }
+.bal-status { text-align: center; font-weight: 600; margin: 10px 0 0; }
+.bal-status.ok { color: var(--ok); }
+.bal-status.warn { color: var(--amber); }
+.bal-after { background: var(--accent-soft); border-radius: 10px; padding: 8px 12px; }

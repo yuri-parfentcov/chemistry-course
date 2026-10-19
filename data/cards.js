@@ -1,7 +1,9 @@
 // Карточки для «Коллекции кристаллов» (интервальное повторение).
 // lesson — урок, после которого карточка открывается (и ссылка «повторить урок»).
 // type: mc — вопрос с вариантами, predict — «что увидим?», formula — выбрать формулу, whoami — «кто я?» с подсказками
-export const CARDS = [
+import { LESSON_PACKS } from "./course.js";
+
+const PILOT_CARDS = [
   {
     id: "sv-gas", lesson: "soda-vinegar", type: "mc", topic: "Пузыри от соды",
     q: "Какой газ выделяется, когда соду гасят уксусом?",
@@ -51,3 +53,5 @@ export const CARDS = [
     explain: "CO₂: он же пузыри в соде с уксусом, в газировке и в дрожжевом тесте."
   }
 ];
+
+export const CARDS = [...LESSON_PACKS.flatMap((p) => p.CARDS), ...PILOT_CARDS];

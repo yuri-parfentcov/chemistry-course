@@ -17,8 +17,13 @@ export function createBeaker(canvas) {
     pile: 0, pileRgb: [255, 255, 255],
     grains: [], bubbles: [], fizz: 0, foam: 0,
     temp: 22, tempShown: 22, gasLabel: null, gasAlpha: 0,
-    pour: null
+    pour: null,
+    // смеси: муть, осадок, верхний слой (или эмульсия), кристаллы, микробы, пар, огонь
+    turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null,
+    microbes: 0, steam: [], steaming: 0, flame: 0
   };
+  const BLOBS = Array.from({ length: 26 }, () => [Math.random(), Math.random(), 3 + Math.random() * 6]);
+  const MICROBES = Array.from({ length: 7 }, () => [Math.random(), Math.random(), Math.random() * 6]);
   let running = false;
   let last = 0;
 
@@ -77,6 +82,90 @@ export function createBeaker(canvas) {
     s.foam += (foamTarget - s.foam) * Math.min(1, dt * (foamTarget > s.foam ? 4 : 0.6));
     s.gasAlpha += ((s.fizz > 0.15 ? 1 : 0) - s.gasAlpha) * Math.min(1, dt * 2);
     s.tempShown += (s.temp - s.tempShown) * Math.min(1, dt * 0.8);
+    s.turbidShown += (s.turbid - s.turbidShown) * Math.min(1, dt * 1.5);
+    // пар и огонь
+    if (s.steaming > 0) {
+      s.steaming -= dt;
+      for (let i = 0; i < 2; i++) {
+        s.steam.push({ x: B.x1 + 20 + Math.random() * (B.x2 - B.x1 - 40), y: surfaceY() - 4, r: 4 + Math.random() * 6, a: 1, vy: 30 + Math.random() * 30 });
+      }
+    }
+    for (const p of s.steam) { p.y -= p.vy * dt; p.r += dt * 8; p.a -= dt * 0.6; p.x += Math.sin(p.y / 20) * 0.4; }
+    s.steam = s.steam.filter((p) => p.a > 0);
+    s.flame += ((s.steaming > 0 ? 1 : 0) - s.flame) * Math.min(1, dt * 3);
+  }
+
+  function drawMixture(time, sy) {
+    const liquidH = B.bottom - sy;
+    if (s.level > 0.02) {
+      // верхний слой несмешивающейся жидкости или эмульсия-капли
+      if (s.layer && s.layer.emulsion) {
+        ctx.fillStyle = `rgba(${s.layer.rgb.join(",")},0.85)`;
+        for (const [fx, fy, r] of BLOBS) {
+          ctx.beginPath();
+          ctx.arc(B.x1 + 8 + fx * (B.x2 - B.x1 - 16), sy + 6 + fy * (liquidH - 12) + Math.sin(time / 500 + fx * 9) * 2, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else if (s.layer && s.layer.frac > 0) {
+        const h = liquidH * s.layer.frac;
+        ctx.fillStyle = `rgba(${s.layer.rgb.join(",")},0.92)`;
+        ctx.fillRect(B.x1, sy, B.x2 - B.x1, h);
+        ctx.strokeStyle = "rgba(120,90,30,0.6)";
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        ctx.moveTo(B.x1, sy + h);
+        ctx.lineTo(B.x2, sy + h);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      // муть
+      if (s.turbidShown > 0.01) {
+        ctx.fillStyle = `rgba(150,112,62,${0.6 * s.turbidShown})`;
+        ctx.fillRect(B.x1, sy, B.x2 - B.x1, liquidH);
+        ctx.fillStyle = `rgba(110,80,40,${0.8 * s.turbidShown})`;
+        for (let i = 0; i < 70 * s.turbidShown; i++) {
+          const fx = (Math.sin(i * 91.7) * 0.5 + 0.5), fy = (Math.sin(i * 37.3) * 0.5 + 0.5);
+          ctx.fillRect(B.x1 + 6 + fx * (B.x2 - B.x1 - 12), sy + 4 + fy * (liquidH - 8) + Math.sin(time / 700 + i) * 2, 2, 2);
+        }
+      }
+      // микробы (в жизни их не видно — рисуем крупно для наглядности)
+      if (s.microbes > 0) {
+        ctx.font = "15px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        MICROBES.slice(0, Math.ceil(s.microbes * MICROBES.length)).forEach(([fx, fy, ph]) => {
+          ctx.fillText("🦠", B.x1 + 16 + fx * (B.x2 - B.x1 - 32) + Math.sin(time / 400 + ph) * 4,
+            sy + 14 + fy * Math.max(0, liquidH - 26) + Math.cos(time / 500 + ph) * 3);
+        });
+        ctx.textAlign = "start";
+      }
+    }
+    // осадок на дне
+    if (s.sediment && s.sediment.amt > 0.01) {
+      const h = 6 + s.sediment.amt * 20;
+      ctx.fillStyle = `rgb(${s.sediment.rgb.join(",")})`;
+      ctx.fillRect(B.x1, B.bottom - h, B.x2 - B.x1, h);
+      ctx.fillStyle = "rgba(0,0,0,0.18)";
+      for (let i = 0; i < 60; i++) {
+        ctx.fillRect(B.x1 + (Math.sin(i * 12.3) * 0.5 + 0.5) * (B.x2 - B.x1), B.bottom - (Math.sin(i * 7.1) * 0.5 + 0.5) * h, 2, 2);
+      }
+    }
+    // кристаллы после выпаривания
+    if (s.crystals && s.crystals.amt > 0.01) {
+      ctx.fillStyle = `rgb(${s.crystals.rgb.join(",")})`;
+      ctx.strokeStyle = "rgba(0,0,0,0.25)";
+      const n = Math.round(10 + s.crystals.amt * 30);
+      for (let i = 0; i < n; i++) {
+        const x = B.x1 + 14 + (Math.sin(i * 45.1) * 0.5 + 0.5) * (B.x2 - B.x1 - 28);
+        const size = 4 + (Math.sin(i * 3.7) * 0.5 + 0.5) * 5;
+        const y = B.bottom - 3 - size - (Math.sin(i * 17.9) * 0.5 + 0.5) * 8;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(Math.sin(i) * 0.5);
+        ctx.fillRect(-size / 2, -size / 2, size, size);
+        ctx.strokeRect(-size / 2, -size / 2, size, size);
+        ctx.restore();
+      }
+    }
   }
 
   function draw(time) {
@@ -110,6 +199,7 @@ export function createBeaker(canvas) {
       }
       ctx.stroke();
     }
+    drawMixture(time, sy);
     // кучка порошка на дне сухого стакана
     if (s.pile > 0.01) {
       const [r, g, b] = s.pileRgb;
@@ -151,6 +241,24 @@ export function createBeaker(canvas) {
     }
     ctx.restore();
 
+    // пар над стаканом
+    for (const p of s.steam) {
+      ctx.fillStyle = `rgba(200,210,215,${p.a * 0.5})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // огонь горелки под стаканом
+    if (s.flame > 0.02) {
+      for (let i = 0; i < 7; i++) {
+        const x = 100 + i * 13, hgt = (10 + Math.sin(time / 80 + i * 2) * 4) * s.flame;
+        ctx.fillStyle = i % 2 ? "rgba(255,170,40,0.9)" : "rgba(80,140,255,0.85)";
+        ctx.beginPath();
+        ctx.moveTo(x - 5, 298);
+        ctx.quadraticCurveTo(x, 298 - hgt * 2, x + 5, 298);
+        ctx.fill();
+      }
+    }
     // струя при наливании
     if (s.pour) {
       const [r, g, b] = s.pour.rgb;
@@ -240,7 +348,9 @@ export function createBeaker(canvas) {
     step(dt);
     draw(time);
     const busy = s.grains.length || s.bubbles.length || s.fizz > 0.02 || s.foam > 0.02 || s.pour ||
-      Math.abs(s.level - s.portions / CAPACITY) > 0.002 || Math.abs(s.temp - s.tempShown) > 0.05;
+      Math.abs(s.level - s.portions / CAPACITY) > 0.002 || Math.abs(s.temp - s.tempShown) > 0.05 ||
+      s.steam.length || s.steaming > 0 || s.flame > 0.02 || s.microbes > 0 || (s.layer && s.layer.emulsion) ||
+      Math.abs(s.turbid - s.turbidShown) > 0.005 || s.turbid > 0.01;
     if (busy) requestAnimationFrame(frame);
     else { running = false; last = 0; }
   }
@@ -288,7 +398,25 @@ export function createBeaker(canvas) {
       kick();
     },
     reset() {
-      Object.assign(s, { portions: 0, level: 0, rgb: null, pile: 0, grains: [], bubbles: [], fizz: 0, foam: 0, temp: 22, gasLabel: null, gasAlpha: 0, pour: null });
+      Object.assign(s, { portions: 0, level: 0, rgb: null, pile: 0, grains: [], bubbles: [], fizz: 0, foam: 0, temp: 22, gasLabel: null, gasAlpha: 0, pour: null,
+        turbid: 0, turbidShown: 0, sediment: null, layer: null, crystals: null, microbes: 0, steam: [], steaming: 0 });
+      kick();
+    },
+    // Смеси: задать видимое состояние целиком (то, что не передано, не меняется).
+    // { portions, rgb, turbid, sediment:{amt,rgb}, layer:{frac,rgb,emulsion}, crystals:{amt,rgb}, microbes, pile }
+    setScene(scene) {
+      if (scene.rgb) scene = { ...scene, rgb: hexToRgb(scene.rgb) };
+      for (const k of ["sediment", "layer", "crystals"]) {
+        if (scene[k] && typeof scene[k].rgb === "string") scene[k] = { ...scene[k], rgb: hexToRgb(scene[k].rgb) };
+      }
+      if (scene.pileRgb) scene.pileRgb = hexToRgb(scene.pileRgb);
+      Object.assign(s, scene);
+      kick();
+    },
+    heat(seconds, toTemp = 100) {
+      s.steaming = seconds;
+      s.temp = toTemp;
+      setTimeout(() => { s.temp = 22; kick(); }, seconds * 1000);
       kick();
     },
     redraw: kick

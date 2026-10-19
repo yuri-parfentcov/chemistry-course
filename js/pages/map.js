@@ -2,7 +2,7 @@
 import { MODULES, LESSONS } from "../../data/course.js";
 import { SPHERES } from "../../data/spheres.js";
 import { $, esc } from "../core/util.js";
-import { srs, lessonStatus, openedSpheres, doneCount } from "../core/progress.js";
+import { srs, lessonStatus, openedSpheres, doneCount, ORDER } from "../core/progress.js";
 
 const STATUS = {
   available: { icon: "▶", text: "Начать" },
@@ -24,9 +24,9 @@ function render() {
   $("#spheres").innerHTML = Object.entries(SPHERES).map(([sid, s]) =>
     `<span class="sphere ${opened.has(sid) ? "open" : ""}" title="${esc(s.name)}${opened.has(sid) ? "" : " — ещё не открыта"}">${s.icon}<span>${esc(s.name)}</span></span>`).join("");
 
-  // пилотные миссии доступны сразу и показаны отдельно
-  const pilots = Object.values(LESSONS).filter((l) => l.pilot);
-  $("#pilot").innerHTML = pilots.map(missionHTML).join("");
+  // следующая непройденная миссия — крупно наверху
+  const nextId = ORDER.find((lid) => lessonStatus(lid) === "available");
+  $("#pilot").innerHTML = nextId ? missionHTML(LESSONS[nextId]) : `<p>🎉 Все открытые миссии пройдены. Новые модули скоро появятся.</p>`;
 
   $("#modules").innerHTML = MODULES.map((m) => {
     const lessons = (m.lessons || []).map((id) => LESSONS[id]);
@@ -35,7 +35,7 @@ function render() {
       <div class="module-body">
         <h3>${esc(m.title)}</h3>
         ${lessons.length ? `<div class="missions">${lessons.map(missionHTML).join("")}</div>` : ""}
-        <p class="plan">${lessons.length ? "Скоро ещё: " : "Скоро: "}${m.plan.map(esc).join(" · ")}</p>
+        ${m.plan.length ? `<p class="plan">${lessons.length ? "Скоро ещё: " : "Скоро: "}${m.plan.map(esc).join(" · ")}</p>` : ""}
       </div>
     </li>`;
   }).join("");

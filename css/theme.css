@@ -177,6 +177,16 @@ a.mission:hover { border-color: var(--accent); }
 .el-Na { color: #8a4fd6; }
 .el-N { color: #3b6fe0; }
 .el-Cl { color: #2fa84f; }
+.el-Fe { color: #b8541f; }
+.el-Al { color: #6f7c86; }
+.el-Li { color: #a55be0; }
+.el-K { color: #7d3fc4; }
+.el-P { color: #d9711a; }
+.el-S { color: #b0920f; }
+.el-Ca { color: #3e8a5c; }
+.el-Cu { color: #b06a28; }
+.el-Mg { color: #4f9030; }
+.missions { display: flex; flex-direction: column; gap: 8px; }
 @media (prefers-color-scheme: dark) {
   .el-C { color: #c3ccd1; }
   .el-H { color: #e8eef0; }
