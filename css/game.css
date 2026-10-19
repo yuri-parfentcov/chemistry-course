@@ -41,3 +41,22 @@ a.level:hover { border-color: var(--accent); }
 .forge-status { min-height: 2.6em; margin: 6px 0; }
 .forge-status.ok { color: var(--ok); font-weight: 700; }
 .forge-status.warn { color: var(--bad); }
+
+/* глава 2: обмен электронами */
+.board-svg { width: 100%; display: block; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; margin-top: 10px; touch-action: manipulation; }
+.board-svg .b-atom { cursor: pointer; }
+.board-svg .b-hit { fill: transparent; }
+.board-svg .b-atom.sel .b-hit { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.board-svg .shell { fill: none; stroke: var(--glass); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.board-svg .shell.done { stroke: var(--ok); stroke-dasharray: none; stroke-width: 2.5; }
+.board-svg .b-core { stroke: rgba(0, 0, 0, .25); }
+.board-svg .b-sym { fill: #fff; font: 800 18px system-ui, sans-serif; pointer-events: none; }
+.board-svg .b-cap { fill: var(--ink); font: 600 14px system-ui, sans-serif; }
+.board-svg .electron { fill: #2f7de1; stroke: rgba(0, 0, 0, .25); }
+.board-svg .electron.outer { fill: var(--amber); }
+.board-svg .b-del { cursor: pointer; }
+.board-svg .b-del circle { fill: var(--card); stroke: var(--bad); }
+.board-svg .b-del text { fill: var(--bad); font: 800 16px system-ui, sans-serif; }
+.board-msg { min-height: 1.6em; margin: 8px 0 0; }
+.board-formula { margin: 4px 0 0; color: var(--muted); }
+.store { margin-top: 6px; }

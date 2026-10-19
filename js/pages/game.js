@@ -1,12 +1,13 @@
 // «Атомная мастерская»: главы → уровни → уровень. Адреса: game.html, ?ch=forge, ?ch=forge&lv=f3
-import { CHAPTERS, CHAPTER_BY_ID } from "../../data/game-levels.js?v=20";
-import { LESSONS } from "../../data/course.js?v=20";
-import { isDone } from "../core/progress.js?v=20";
-import { $, esc } from "../core/util.js?v=20";
-import * as store from "../game/store.js?v=20";
-import * as forge from "../game/forge.js?v=20";
+import { CHAPTERS, CHAPTER_BY_ID } from "../../data/game-levels.js?v=22";
+import { LESSONS } from "../../data/course.js?v=22";
+import { isDone } from "../core/progress.js?v=22";
+import { $, esc } from "../core/util.js?v=22";
+import * as store from "../game/store.js?v=22";
+import * as forge from "../game/forge.js?v=22";
+import * as transfer from "../game/transfer.js?v=22";
 
-const ENGINES = { forge };
+const ENGINES = { forge, transfer };
 const main = $("#game");
 const params = new URLSearchParams(location.search);
 // ?preview — для проверки: всё открыто, звёзды не записываются, прогресс курса не трогаем
@@ -86,7 +87,7 @@ function level(c, idx) {
       const box = $(".win", main);
       box.hidden = false;
       box.innerHTML = `
-        <h2>🎉 Заказ выполнен! ${starLine(s)}</h2>
+        <h2>🎉 ${esc(c.winText || "Уровень пройден!")} ${starLine(s)}</h2>
         <p class="muted">Ходов: ${moves}, норма: ${par}.${s < 3 ? " Можно пройти экономнее — попробуйте ещё раз." : ""}</p>
         <p><b>Что это было.</b> ${esc(lv.note)}</p>
         <div class="row">

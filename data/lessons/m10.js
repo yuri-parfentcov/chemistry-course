@@ -1,5 +1,5 @@
 // Модуль 10. Энергия и скорость реакций
-import { fmt, pick } from "../../js/core/util.js?v=20";
+import { fmt, pick } from "../../js/core/util.js?v=22";
 
 export const LESSONS = [
   {

@@ -1,19 +1,19 @@
 // Курс: модули → уроки-миссии → шаги.
 // Шаги: task (задача) → hypothesis (гипотеза) → lab (опыт) → calc (расчёт) → cards (закрепление)
-import { fmt, fixed, pick } from "../js/core/util.js?v=20";
-import * as m1 from "./lessons/m1.js?v=20";
-import * as m2 from "./lessons/m2.js?v=20";
-import * as m3 from "./lessons/m3.js?v=20";
-import * as m4 from "./lessons/m4.js?v=20";
-import * as m5 from "./lessons/m5.js?v=20";
-import * as m6 from "./lessons/m6.js?v=20";
-import * as m7 from "./lessons/m7.js?v=20";
-import * as m8 from "./lessons/m8.js?v=20";
-import * as m9 from "./lessons/m9.js?v=20";
-import * as m10 from "./lessons/m10.js?v=20";
-import * as m11 from "./lessons/m11.js?v=20";
-import * as m12 from "./lessons/m12.js?v=20";
-import * as m13 from "./lessons/m13.js?v=20";
+import { fmt, fixed, pick } from "../js/core/util.js?v=22";
+import * as m1 from "./lessons/m1.js?v=22";
+import * as m2 from "./lessons/m2.js?v=22";
+import * as m3 from "./lessons/m3.js?v=22";
+import * as m4 from "./lessons/m4.js?v=22";
+import * as m5 from "./lessons/m5.js?v=22";
+import * as m6 from "./lessons/m6.js?v=22";
+import * as m7 from "./lessons/m7.js?v=22";
+import * as m8 from "./lessons/m8.js?v=22";
+import * as m9 from "./lessons/m9.js?v=22";
+import * as m10 from "./lessons/m10.js?v=22";
+import * as m11 from "./lessons/m11.js?v=22";
+import * as m12 from "./lessons/m12.js?v=22";
+import * as m13 from "./lessons/m13.js?v=22";
 
 export const LESSON_PACKS = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13];
 

@@ -10,6 +10,7 @@ import { isBalanced, sideAtoms, countAtoms } from "../js/engine/formula.js";
 import { CHAPTERS } from "../data/game-levels.js";
 import { BY_Z } from "../data/periodic.js";
 import * as forge from "../js/game/forge.js";
+import * as transfer from "../js/game/transfer.js";
 
 let errors = 0;
 const fail = (msg) => { errors++; console.error("✗ " + msg); };
@@ -114,7 +115,7 @@ for (const m of MOLECULES) {
 if (JSON.stringify(countAtoms("Ca(OH)2")) !== JSON.stringify({ Ca: 1, O: 2, H: 2 })) fail("countAtoms: скобки");
 
 // Игра: уровни решаемы, норма ходов считается
-const ENGINES = { forge };
+const ENGINES = { forge, transfer };
 let gameLevels = 0;
 const ids = new Set();
 for (const c of CHAPTERS) {
