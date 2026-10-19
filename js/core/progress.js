@@ -28,7 +28,6 @@ export function completeLesson(id) {
 export const srs = createSrs({ key: "chem-garden-v1", cards: CARDS, isAvailable: (c) => isDone(c.lesson) });
 
 // Порядок миссий — как в модулях. Миссия открывается, когда пройдена предыдущая
-// (пилотные открыты сразу).
 export const ORDER = MODULES.flatMap((m) => m.lessons || []);
 
 export function nextLesson(id) {
@@ -42,7 +41,7 @@ export function lessonStatus(id) {
   if (!lesson) return "locked";
   if (!isDone(id)) {
     const i = ORDER.indexOf(id);
-    return lesson.pilot || i <= 0 || isDone(ORDER[i - 1]) ? "available" : "locked";
+    return i <= 0 || isDone(ORDER[i - 1]) ? "available" : "locked";
   }
   const cards = CARDS.filter((c) => c.lesson === id);
   return cards.length && cards.every((c) => srs.box(c.id) >= LEARNED_BOX) ? "mastered" : "done";

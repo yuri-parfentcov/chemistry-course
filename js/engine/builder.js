@@ -116,6 +116,18 @@ export function createBuilder(root, { palette = ["H", "C", "O"], onMolecule = ()
     return comps;
   }
 
+  // Строение: для каждого «тяжёлого» атома (не H) — его соседи, например "C:CHHO"
+  function structureKey(comp) {
+    return comp.filter((a) => a.el !== "H").map((a) => {
+      const nb = [];
+      bonds.forEach((b) => {
+        const o = b.a === a.id ? b.b : b.b === a.id ? b.a : null;
+        if (o) for (let k = 0; k < b.o; k++) nb.push(byId(o).el);
+      });
+      return `${a.el}:${nb.sort().join("")}`;
+    }).sort().join(" ");
+  }
+
   function analyse() {
     if (!atoms.length) {
       status.textContent = "Нажмите на атом сверху, чтобы положить его на стол.";
@@ -129,6 +141,11 @@ export function createBuilder(root, { palette = ["H", "C", "O"], onMolecule = ()
       const freeHands = comp.reduce((s, a) => s + free(a), 0);
       if (freeHands > 0 || comp.length < 2) continue;
       const m = MOLECULE_BY_KEY[compositionKey(counts)];
+      if (m && m.heavy && structureKey(comp) !== [...m.heavy].sort().join(" ")) {
+        // состав верный, а атомы соединены иначе — это другое вещество (изомер)
+        msgs.push(`Атомов столько же, сколько в молекуле «${m.name}», но соединены они по-другому. ${m.isomer || "Это другое вещество — изомер."} Попробуйте перестроить.`);
+        continue;
+      }
       if (m) {
         msgs.push(`✓ Готово: ${m.name}!`);
         if (!found.has(m.formula)) {
