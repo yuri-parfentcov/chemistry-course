@@ -1,7 +1,7 @@
 // Конструктор атома: протоны, нейтроны, электроны → какой это элемент, ион или изотоп.
 // Рядом мини-таблица Менделеева: в ней подсвечивается собранный атом, клик по клетке — справка.
-import { PERIODIC, BY_Z, ISOTOPE_NOTES } from "../../data/periodic.js?v=11";
-import { $, esc } from "../core/util.js?v=11";
+import { PERIODIC, BY_Z, ISOTOPE_NOTES } from "../../data/periodic.js?v=13";
+import { $, esc } from "../core/util.js?v=13";
 
 const SHELLS = [2, 8, 8, 18];           // упрощённая схема заполнения для первых 20 элементов
 const SHELL_R = [62, 98, 134, 166];

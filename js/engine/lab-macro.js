@@ -1,5 +1,5 @@
 // Макро-слой: стакан на canvas — жидкость, порошок, пузыри, пена, термометр
-import { cssVar, fmt } from "../core/util.js?v=11";
+import { cssVar, fmt } from "../core/util.js?v=13";
 
 const W = 320, H = 300;
 const B = { x1: 70, x2: 210, top: 36, bottom: 272, r: 14 };

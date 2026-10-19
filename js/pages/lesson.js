@@ -1,27 +1,28 @@
 // Плеер урока-миссии: шаги по порядку, «Дальше» открывается, когда шаг выполнен.
 // Шаги-тренажёры (lab, separate, atom, build, balance, micro) показывают список целей
 // и открывают теорию, когда цели выполнены.
-import { LESSONS } from "../../data/course.js?v=11";
-import { REACTIONS } from "../../data/reactions.js?v=11";
-import { SPHERES } from "../../data/spheres.js?v=11";
-import { CARDS } from "../../data/cards.js?v=11";
-import { $, $$, esc } from "../core/util.js?v=11";
-import { completeLesson, lessonStatus, nextLesson } from "../core/progress.js?v=11";
-import { createLab } from "../engine/lab.js?v=11";
-import { createSeparator } from "../engine/separate.js?v=11";
-import { createMicro } from "../engine/lab-micro.js?v=11";
-import { createCalc } from "../engine/calc.js?v=11";
-import { createAtom } from "../engine/atom.js?v=11";
-import { createBuilder } from "../engine/builder.js?v=11";
-import { createBalancer } from "../engine/balancer.js?v=11";
-import { createMixer } from "../engine/mixer.js?v=11";
-import { createCell } from "../engine/cell.js?v=11";
-import { createRate } from "../engine/rate.js?v=11";
-import { createSort } from "../engine/sort.js?v=11";
-import { createCombine } from "../engine/combine.js?v=11";
-import { createMicelle } from "../engine/micelle.js?v=11";
-import { equationHTML, } from "../engine/equation.js?v=11";
-import { formulaHTML } from "../engine/formula.js?v=11";
+import { LESSONS } from "../../data/course.js?v=13";
+import { REACTIONS } from "../../data/reactions.js?v=13";
+import { SPHERES } from "../../data/spheres.js?v=13";
+import { CARDS } from "../../data/cards.js?v=13";
+import { $, $$, esc } from "../core/util.js?v=13";
+import { completeLesson, lessonStatus, nextLesson } from "../core/progress.js?v=13";
+import { createLab } from "../engine/lab.js?v=13";
+import { createSeparator } from "../engine/separate.js?v=13";
+import { createMicro } from "../engine/lab-micro.js?v=13";
+import { createCalc } from "../engine/calc.js?v=13";
+import { createAtom } from "../engine/atom.js?v=13";
+import { createBuilder } from "../engine/builder.js?v=13";
+import { createBalancer } from "../engine/balancer.js?v=13";
+import { createMixer } from "../engine/mixer.js?v=13";
+import { createCell } from "../engine/cell.js?v=13";
+import { createRate } from "../engine/rate.js?v=13";
+import { createSort } from "../engine/sort.js?v=13";
+import { createCombine } from "../engine/combine.js?v=13";
+import { createMicelle } from "../engine/micelle.js?v=13";
+import { createDemo } from "../engine/demos.js?v=13";
+import { equationHTML, } from "../engine/equation.js?v=13";
+import { formulaHTML } from "../engine/formula.js?v=13";
 
 const id = new URLSearchParams(location.search).get("id");
 const lesson = LESSONS[id];
@@ -104,6 +105,7 @@ function trainer(step, i, { title = "", work = "" } = {}) {
   stage.innerHTML = `
     <section class="card">
       ${title ? `<h2>${title}</h2>` : ""}
+      ${step.html ? `<div class="step-html">${step.html}</div>` : ""}
       ${step.intro ? `<p>${step.intro}</p>` : ""}
       <ul class="checklist">${step.goals.map((g) =>
         `<li data-goal="${g.id}" class="${reached.has(g.id) ? "ok" : ""}"><span class="box"></span>${esc(g.text)}${g.optional ? ' <span class="opt-tag">по желанию</span>' : ""}</li>`).join("")}</ul>
@@ -246,6 +248,12 @@ const RENDER = {
   sort(step, i) {
     const t = trainer({ ...step, goals: [{ id: "all", text: step.goalText || "Разложите все карточки по корзинам" }] }, i, { work: '<div id="sortRoot"></div>' });
     createSort($("#sortRoot", stage), step.sort, { onProgress(p) { if (p.done === p.total) t.goal("all"); } });
+  },
+
+  // Интерактивная демонстрация к теории: текст (html) виден сразу, цели { id, event }
+  demo(step, i) {
+    const t = trainer(step, i, { work: '<div id="demoRoot"></div>' });
+    createDemo($("#demoRoot", stage), step.demo, { onEvent(ev) { step.goals.filter((g) => g.event === ev).forEach((g) => t.goal(g.id)); } });
   },
 
   // Комбинатор: цели { id, key } — найти конкретную пару

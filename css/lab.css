@@ -347,3 +347,55 @@
 .bal-status.warn { color: var(--amber); }
 .bal-after { background: var(--accent-soft); border-radius: 10px; padding: 8px 12px; }
 .formula pre { max-width: 100%; overflow-x: auto; font-size: .9em; }
+
+/* ───── Демонстрации к теории (js/engine/demos.js) ───── */
+.step-html > :first-child { margin-top: 0; }
+.demo { display: flex; flex-direction: column; gap: 12px; }
+.demo-row, .demo-scale { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: center; }
+@media (max-width: 640px) { .demo-row, .demo-scale { grid-template-columns: minmax(0, 1fr); } }
+.demo-svg { width: 100%; max-width: 380px; display: block; margin: 0 auto; background: var(--bg); border-radius: 12px; }
+.demo-svg.wide { max-width: 640px; }
+.demo-side p { margin: 6px 0; }
+.demo-label { fill: var(--muted); font: 600 13px system-ui, sans-serif; }
+.demo-label.big { font-size: 17px; fill: var(--ink); }
+.demo-caption { min-height: 3em; margin: 0; }
+.scale-name { font-size: 1.15rem; }
+.scale-path { font-size: .9rem; color: var(--muted); padding-left: 20px; margin: 8px 0 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-btn { font: inherit; font-size: .9rem; cursor: pointer; border: 2px solid var(--border); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 4px 12px; min-height: 36px; }
+.chip-btn.on { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.demo-svg .shell { fill: none; stroke: var(--glass); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.demo-svg .electron { fill: #2f7de1; stroke: rgba(0, 0, 0, .25); }
+.demo-svg .electron.outer { fill: var(--amber); }
+.demo-svg .nucleus-ball { fill: #e0453a; stroke: rgba(0, 0, 0, .25); }
+.demo-svg .nucleus-text { fill: #fff; font: 700 15px system-ui, sans-serif; }
+.demo-svg .nucleus-text.small { font-size: 10px; }
+.demo-svg .spin { transform-box: view-box; transform-origin: 50% 50%; animation: spin linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ion-svg { transition: box-shadow .3s; }
+.ion-svg.pos { box-shadow: 0 0 0 3px #e0453a55 inset; }
+.ion-svg.neg { box-shadow: 0 0 0 3px #2f7de155 inset; }
+.demo-svg .flyout { animation: flyout .8s ease-out forwards; }
+@keyframes flyout { to { transform: translate(90px, -60px); opacity: 0; } }
+.ion-symbol .big-symbol { font-size: 2.2rem; font-weight: 800; margin-right: 8px; }
+.ion-dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 8px 0; }
+.ion-dl dt { color: var(--muted); }
+.ion-dl dd { margin: 0; font-weight: 600; }
+.ion-msg { color: var(--muted); }
+.demo-svg .charge circle { stroke: rgba(0, 0, 0, .25); stroke-width: 2; }
+.demo-svg .charge.pos circle { fill: #e0453a; }
+.demo-svg .charge.neg circle { fill: #2f7de1; }
+.demo-svg .charge text { fill: #fff; font: 800 40px system-ui, sans-serif; pointer-events: none; }
+.demo-svg .pair-glow { fill: var(--amber); opacity: .25; }
+.demo-svg .ruth-source { fill: var(--glass); }
+.demo-svg .ruth-foil { fill: #d4a017; }
+.demo-svg .ruth-alpha { fill: #e0453a; }
+.ruth-trail { fill: none; stroke: #e0453a; stroke-width: 1; opacity: .18; }
+.ruth-trail.bent { opacity: .6; stroke: var(--amber); stroke-width: 1.5; }
+.ruth-trail.back { opacity: 1; stroke: #c2410c; stroke-width: 2.5; }
+.ruth-count .hot { color: var(--bad); }
+.ruth-zoom { background: var(--accent-soft); border-radius: 10px; padding: 8px 12px; }
+.timeline { list-style: none; padding: 0; margin: 8px 0; border-left: 3px solid var(--accent-soft); }
+.timeline li { padding: 4px 0 8px 14px; position: relative; }
+.timeline li::before { content: ""; position: absolute; left: -8px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+.timeline b:first-child { color: var(--accent); margin-right: 6px; }
