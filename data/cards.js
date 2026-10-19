@@ -1,7 +1,7 @@
 // Карточки для «Коллекции кристаллов» (интервальное повторение).
 // lesson — урок, после которого карточка открывается (и ссылка «повторить урок»).
 // type: mc — вопрос с вариантами, predict — «что увидим?», formula — выбрать формулу, whoami — «кто я?» с подсказками
-import { LESSON_PACKS } from "./course.js?v=22";
+import { LESSON_PACKS } from "./course.js?v=24";
 
 const PILOT_CARDS = [
   {

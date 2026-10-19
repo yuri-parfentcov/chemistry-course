@@ -1,6 +1,6 @@
 // Сортировщик: разложите карточки по корзинам. Нажмите карточку, потом корзину.
 // Верно — карточка ложится в корзину с пояснением; неверно — подсказка, можно попробовать ещё.
-import { $, $$, esc, shuffle } from "../core/util.js?v=22";
+import { $, $$, esc, shuffle } from "../core/util.js?v=24";
 
 // cfg: { bins: [{ id, icon, label }], items: [{ id, icon, label, bin, explain }] }
 export function createSort(root, cfg, { onProgress = () => {} } = {}) {

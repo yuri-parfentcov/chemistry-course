@@ -11,6 +11,7 @@ import { CHAPTERS } from "../data/game-levels.js";
 import { BY_Z } from "../data/periodic.js";
 import * as forge from "../js/game/forge.js";
 import * as transfer from "../js/game/transfer.js";
+import * as grid from "../js/game/grid.js";
 
 let errors = 0;
 const fail = (msg) => { errors++; console.error("✗ " + msg); };
@@ -115,7 +116,7 @@ for (const m of MOLECULES) {
 if (JSON.stringify(countAtoms("Ca(OH)2")) !== JSON.stringify({ Ca: 1, O: 2, H: 2 })) fail("countAtoms: скобки");
 
 // Игра: уровни решаемы, норма ходов считается
-const ENGINES = { forge, transfer };
+const ENGINES = { forge, transfer, grid };
 let gameLevels = 0;
 const ids = new Set();
 for (const c of CHAPTERS) {
@@ -129,6 +130,10 @@ for (const c of CHAPTERS) {
         if (!BY_Z[a.target.z]) fail(`игра ${lv.id}: нет элемента №${a.target.z}`);
         if (forge.status(a.start, a.target).done) fail(`игра ${lv.id}: атом ${i + 1} уже готов в начале`);
       });
+    }
+    if (c.engine === "grid") {
+      const real = grid.solve(lv);
+      if (real !== lv.par) fail(`игра ${lv.id}: норма в данных ${lv.par}, решатель нашёл ${real}`);
     }
     const par = ENGINES[c.engine].par(lv);
     if (!Number.isFinite(par) || par < 1) fail(`игра ${lv.id}: уровень не решается (норма ${par})`);

@@ -1,5 +1,5 @@
 // Модуль 8. Соли, осадки, жёсткость воды
-import { fmt, pick } from "../../js/core/util.js?v=22";
+import { fmt, pick } from "../../js/core/util.js?v=24";
 
 export const LESSONS = [
   {

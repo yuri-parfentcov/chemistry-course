@@ -1,5 +1,5 @@
 // Справочник молекул для конструктора: узнаём собранную молекулу по составу атомов
-import { countAtoms } from "../js/engine/formula.js?v=22";
+import { countAtoms } from "../js/engine/formula.js?v=24";
 
 export const MOLECULES = [
   { formula: "H2", name: "водород", note: "Самый лёгкий газ. Горит, оставляя только воду." },

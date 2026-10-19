@@ -60,3 +60,19 @@ a.level:hover { border-color: var(--accent); }
 .board-msg { min-height: 1.6em; margin: 8px 0 0; }
 .board-formula { margin: 4px 0 0; color: var(--muted); }
 .store { margin-top: 6px; }
+
+/* глава 3: молекулы на поле */
+.grid-target { margin: 4px 0 8px; font-size: 1.05rem; }
+.grid-svg { width: 100%; max-width: 560px; display: block; margin: 0 auto; touch-action: none; outline: none; }
+.grid-svg:focus-visible { outline: 3px solid var(--amber); border-radius: 10px; }
+.grid-svg .g-floor { fill: var(--card); stroke: var(--border); }
+.grid-svg .g-wall { fill: var(--glass); opacity: .45; }
+.grid-svg .g-bond { stroke: var(--bond); stroke-width: 7; stroke-linecap: round; }
+.grid-svg .g-bond.mine { stroke: var(--accent); }
+.grid-svg .g-ball { stroke: var(--atom-stroke); stroke-width: 1.5; }
+.grid-svg .g-sym { font: 800 17px system-ui, sans-serif; pointer-events: none; }
+.grid-svg .g-hand { fill: var(--amber); stroke: rgba(0, 0, 0, .3); }
+.grid-svg .g-ring { fill: none; stroke: var(--accent); stroke-width: 3; stroke-dasharray: 5 4; }
+.dpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-areas: ". up ." "left down right"; gap: 6px; justify-content: center; margin: 10px 0 0; }
+.dpad [data-dir="up"] { grid-area: up; } .dpad [data-dir="left"] { grid-area: left; } .dpad [data-dir="down"] { grid-area: down; } .dpad [data-dir="right"] { grid-area: right; }
+.dpad .btn { padding: 0; font-size: 1.3rem; }

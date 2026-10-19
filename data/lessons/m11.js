@@ -1,5 +1,5 @@
 // Модуль 11. Органика I: топливо, спирты, ароматы
-import { fmt, pick } from "../../js/core/util.js?v=22";
+import { fmt, pick } from "../../js/core/util.js?v=24";
 
 const BUILD_HELP = "Нажмите на атом сверху — он появится на столе. Нажмите на один атом, потом на другой — между ними появится связь. Нажмите на ту же пару ещё раз — связь станет двойной. Нажатие на связь убирает её. Если выбран атом, новый атом сразу к нему присоединится.";
 const PRE = `<pre style="display:inline-block; max-width:100%; overflow-x:auto; text-align:left; margin:0">`;

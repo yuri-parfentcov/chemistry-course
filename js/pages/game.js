@@ -1,13 +1,14 @@
 // «Атомная мастерская»: главы → уровни → уровень. Адреса: game.html, ?ch=forge, ?ch=forge&lv=f3
-import { CHAPTERS, CHAPTER_BY_ID } from "../../data/game-levels.js?v=22";
-import { LESSONS } from "../../data/course.js?v=22";
-import { isDone } from "../core/progress.js?v=22";
-import { $, esc } from "../core/util.js?v=22";
-import * as store from "../game/store.js?v=22";
-import * as forge from "../game/forge.js?v=22";
-import * as transfer from "../game/transfer.js?v=22";
+import { CHAPTERS, CHAPTER_BY_ID } from "../../data/game-levels.js?v=24";
+import { LESSONS } from "../../data/course.js?v=24";
+import { isDone } from "../core/progress.js?v=24";
+import { $, esc } from "../core/util.js?v=24";
+import * as store from "../game/store.js?v=24";
+import * as forge from "../game/forge.js?v=24";
+import * as transfer from "../game/transfer.js?v=24";
+import * as grid from "../game/grid.js?v=24";
 
-const ENGINES = { forge, transfer };
+const ENGINES = { forge, transfer, grid };
 const main = $("#game");
 const params = new URLSearchParams(location.search);
 // ?preview — для проверки: всё открыто, звёзды не записываются, прогресс курса не трогаем
