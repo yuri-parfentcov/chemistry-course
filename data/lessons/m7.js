@@ -1,6 +1,6 @@
 // Модуль 7. Кислоты, основания, pH
-import { fmt, pick } from "../../js/core/util.js";
-import { SUBSTANCES } from "../substances.js";
+import { fmt, pick } from "../../js/core/util.js?v=11";
+import { SUBSTANCES } from "../substances.js?v=11";
 
 const present = (st, kind) => Object.entries(st.units).some(([id, n]) => n > 0 && SUBSTANCES[id][kind]);
 const used = (st, kind) => Object.keys(st.units).some((id) => SUBSTANCES[id][kind]);

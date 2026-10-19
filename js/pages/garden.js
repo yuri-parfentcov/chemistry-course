@@ -1,10 +1,10 @@
 // «Коллекция кристаллов» — тренировка с интервальным повторением (порт learn.js из pharao)
-import { CARDS } from "../../data/cards.js";
-import { LESSONS } from "../../data/course.js";
-import { $, $$, esc, shuffle } from "../core/util.js";
-import { formulaHTML } from "../engine/formula.js";
-import { formatDay, LEARNED_BOX } from "../core/srs.js";
-import { srs } from "../core/progress.js";
+import { CARDS } from "../../data/cards.js?v=11";
+import { LESSONS } from "../../data/course.js?v=11";
+import { $, $$, esc, shuffle } from "../core/util.js?v=11";
+import { formulaHTML } from "../engine/formula.js?v=11";
+import { formatDay, LEARNED_BOX } from "../core/srs.js?v=11";
+import { srs } from "../core/progress.js?v=11";
 
 const STAGES = ["⚪", "💧", "🧪", "⚗️", "🔬", "💎"];
 const STAGE_NAMES = ["ещё не начат", "капля", "пробирка", "колба", "микроскоп", "кристалл"];
