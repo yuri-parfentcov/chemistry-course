@@ -1,7 +1,7 @@
 // Микро-слой («лупа»): атомы-шарики перестраивают связи.
 // Фазы шкалы t ∈ [0, 1]: встреча → разрыв связей → перестройка → новые связи → газ улетает
-import { ELEMENTS } from "../../data/elements.js?v=19";
-import { $, clamp, lerp, ease, cssVar, reducedMotion } from "../core/util.js?v=19";
+import { ELEMENTS } from "../../data/elements.js?v=20";
+import { $, clamp, lerp, ease, cssVar, reducedMotion } from "../core/util.js?v=20";
 
 const W = 640, H = 330;
 const PHASES = [0, 0.15, 0.35, 0.75, 0.9, 1];

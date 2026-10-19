@@ -1,9 +1,9 @@
 // Глава 1 «Сборка на заказ»: из лотка частиц собрать атомы и ионы по заказу.
 // Ход — одна частица, перенесённая из лотка в атом или обратно.
 // Логика (par, status) чистая — её же использует tools/check.mjs.
-import { BY_Z } from "../../data/periodic.js?v=19";
-import { atomMarkup, shellsOf } from "../engine/atom.js?v=19";
-import { $, $$, esc } from "../core/util.js?v=19";
+import { BY_Z } from "../../data/periodic.js?v=20";
+import { atomMarkup, shellsOf } from "../engine/atom.js?v=20";
+import { $, $$, esc } from "../core/util.js?v=20";
 
 const KINDS = ["p", "n", "e"];
 const NAMES = { p: ["протон", "протона", "протонов"], n: ["нейтрон", "нейтрона", "нейтронов"], e: ["электрон", "электрона", "электронов"] };
@@ -112,9 +112,11 @@ export function mount(root, level, api) {
       if (!st.done) allDone = false;
       const el = BY_Z[a.p];
       const q = a.p - a.e;
-      const now = a.p ? `Сейчас: <b>${symbol(a.p, q, a.p + a.n)}</b>${el ? ` (${el.name.toLowerCase()})` : ""}` : "Пока пусто";
+      // ⁶Li — литий-6: 3 протона + 3 нейтрона (массовое число = протоны + нейтроны)
+      const mass = el ? ` — ${el.name.toLowerCase()}-${a.p + a.n}: ${a.p} ${plural("p", a.p)} + ${a.n} ${plural("n", a.n)}` : "";
+      const now = a.p ? `Сейчас: <b>${symbol(a.p, q, a.p + a.n)}</b>${mass}` : "Пока пусто";
       let msg;
-      if (st.done) msg = `✓ Готово: ${symbol(t.z, t.q, a.p + a.n)}`;
+      if (st.done) msg = `✓ Готово: <b>${symbol(t.z, t.q, a.p + a.n)}</b>${mass}`;
       else if (st.okP && st.okE) msg = `⚠ ${now}. Ядро <b>${symbol(a.p, 0, a.p + a.n)}</b> нестабильно — такой атом распадётся. Подберите число нейтронов.`;
       else msg = now;
       const s = $(".forge-status", card);

@@ -2,7 +2,7 @@
 // У вещества: ph — его pH «в чистом виде», acid/base — сколько кислоты/щёлочи даёт одна порция
 // (условные «эквиваленты»). Кислоты и щёлочи гасят друг друга; избыток задаёт pH,
 // разбавление водой немного сдвигает его к 7.
-import { clamp } from "../core/util.js?v=19";
+import { clamp } from "../core/util.js?v=20";
 
 export function mixturePH(items) {
   // items: [{ sub, units }]
